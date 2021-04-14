@@ -4,6 +4,8 @@
  * @description Builder
  */
 
+import { DynamoUpdateBuilder } from "./update";
+
 export class DynamoBuilder {
 
     public static create(tableName: string): DynamoBuilder {
@@ -16,5 +18,10 @@ export class DynamoBuilder {
     private constructor(tableName: string) {
 
         this._tableName = tableName;
+    }
+
+    public update(): DynamoUpdateBuilder {
+
+        return DynamoUpdateBuilder.create(this._tableName);
     }
 }

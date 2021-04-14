@@ -5,3 +5,5 @@
  */
 
 export * from "./builder";
+export * from "./update";
+
