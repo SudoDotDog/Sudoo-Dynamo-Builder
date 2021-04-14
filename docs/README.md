@@ -14,3 +14,23 @@ yarn add @sudoo/dynamo-builder
 # Or
 npm install @sudoo/dynamo-builder --save
 ```
+
+## Update Expression Building
+
+```ts
+import * as AWS from "aws-sdk";
+import { DynamoBuilder } from "@sudoo/dynamo-builder";
+
+const updateInput = DynamoBuilder
+    .create('tableName')
+    .update()
+    .where('key', 'value')
+    .update('key1', 'value')
+    .update('key2', 'value')
+    .update('key3', 'value')
+    .build();
+
+(new AWS.DynamoDB.DocumentClient()).update(updateInput, (err, data) => {
+    // Handle Response
+});
+```
