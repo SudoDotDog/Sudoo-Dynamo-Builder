@@ -1,0 +1,22 @@
+{
+    "cSpell.words": [
+        "Deserialize",
+        "RMRF",
+        "Unmount",
+        "WMXPY",
+        "bwnl",
+        "clazz",
+        "codecov",
+        "docz",
+        "esnext",
+        "forin",
+        "mocharc",
+        "splited",
+        "sudoo",
+        "triforce",
+        "tshook"
+    ],
+    "eslint.options": {
+        "configFile": "./typescript/.eslintrc.json"
+    }
+}
