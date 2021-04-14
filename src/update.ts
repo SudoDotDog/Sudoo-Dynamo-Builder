@@ -16,8 +16,8 @@ export class DynamoUpdateBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _where: DynamoRecord[];
-    private readonly _update: DynamoRecord[];
+    private readonly _where: DynamoRecord[] = [];
+    private readonly _update: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
 
