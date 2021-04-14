@@ -26,6 +26,10 @@ export class DynamoUpdateBuilder {
 
     public where(key: string, value: string): this {
 
+        if (typeof value === 'undefined') {
+            return this;
+        }
+
         this._where.push({
             key,
             value,
@@ -33,7 +37,28 @@ export class DynamoUpdateBuilder {
         return this;
     }
 
-    public update(key: string, value: string): this {
+    public update(key: string, value?: any): this {
+
+        if (typeof value === 'undefined') {
+            return this;
+        }
+
+        if (typeof value === 'string') {
+            return this.updateString(key, value);
+        }
+
+        if (value instanceof Date) {
+            return this.updateString(key, value.toISOString());
+        }
+
+        if (Boolean(value.toString)) {
+            return this.updateString(key, value.toString());
+        }
+
+        return this.updateString(key, String(value));
+    }
+
+    public updateString(key: string, value: string): this {
 
         this._update.push({
             key,
