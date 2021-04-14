@@ -5,6 +5,7 @@
  */
 
 import { DynamoGetBuilder } from "./get";
+import { DynamoPutBuilder } from "./put";
 import { DynamoUpdateBuilder } from "./update";
 
 export class DynamoBuilder {
@@ -24,6 +25,11 @@ export class DynamoBuilder {
     public get(): DynamoGetBuilder {
 
         return DynamoGetBuilder.create(this._tableName);
+    }
+
+    public put(): DynamoPutBuilder {
+
+        return DynamoPutBuilder.create(this._tableName);
     }
 
     public update(): DynamoUpdateBuilder {
