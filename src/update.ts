@@ -4,6 +4,7 @@
  * @description Update
  */
 
+import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
 
 export class DynamoUpdateBuilder {
@@ -39,5 +40,13 @@ export class DynamoUpdateBuilder {
             value,
         });
         return this;
+    }
+
+    public build(): DynamoDB.DocumentClient.UpdateItemInput {
+
+        return {
+            TableName: this._tableName,
+            Key: {},
+        };
     }
 }
