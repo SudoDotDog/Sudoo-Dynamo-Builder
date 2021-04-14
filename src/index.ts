@@ -3,3 +3,5 @@
  * @namespace Dynamo_Builder
  * @description Index
  */
+
+export * from "./builder";
