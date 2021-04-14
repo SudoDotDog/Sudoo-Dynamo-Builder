@@ -6,5 +6,6 @@
 
 export * from "./builder";
 export * from "./declare";
+export * from "./get";
 export * from "./update";
 
