@@ -16,25 +16,11 @@ export class DynamoPutBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _where: DynamoRecord[] = [];
     private readonly _items: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
 
         this._tableName = tableName;
-    }
-
-    public where(key: string, value: string): this {
-
-        if (typeof value === 'undefined') {
-            return this;
-        }
-
-        this._where.push({
-            key,
-            value,
-        });
-        return this;
     }
 
     public addItem(key: string, value?: any): this {
