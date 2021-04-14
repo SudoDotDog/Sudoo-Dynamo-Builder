@@ -4,6 +4,8 @@
  * @description Update
  */
 
+import { DynamoRecord } from "./declare";
+
 export class DynamoUpdateBuilder {
 
     public static create(tableName: string): DynamoUpdateBuilder {
@@ -12,16 +14,30 @@ export class DynamoUpdateBuilder {
     }
 
     private readonly _tableName: string;
-    private readonly _keys: Record<string, string>;
+
+    private readonly _where: DynamoRecord[];
+    private readonly _update: DynamoRecord[];
 
     private constructor(tableName: string) {
 
         this._tableName = tableName;
     }
 
-    public key(key: string, value: string): this {
+    public where(key: string, value: string): this {
 
-        this._keys[key] = value;
+        this._where.push({
+            key,
+            value,
+        });
+        return this;
+    }
+
+    public update(key: string, value: string): this {
+
+        this._update.push({
+            key,
+            value,
+        });
         return this;
     }
 }
