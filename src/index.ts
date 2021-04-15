@@ -9,4 +9,5 @@ export * from "./declare";
 export * from "./get";
 export * from "./put";
 export * from "./update";
+export * from "./util";
 

@@ -6,6 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
+import { convertToStringObject } from "./util";
 
 export class DynamoPutBuilder {
 
@@ -29,19 +30,7 @@ export class DynamoPutBuilder {
             return this;
         }
 
-        if (typeof value === 'string') {
-            return this.addItemString(key, value);
-        }
-
-        if (value instanceof Date) {
-            return this.addItemString(key, value.toISOString());
-        }
-
-        if (Boolean(value.toString)) {
-            return this.addItemString(key, value.toString());
-        }
-
-        return this.addItemString(key, String(value));
+        return this.addItemString(key, convertToStringObject(value));
     }
 
     public addItemString(key: string, value: string): this {

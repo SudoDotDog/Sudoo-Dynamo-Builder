@@ -6,6 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
+import { convertToStringObject } from "./util";
 
 export class DynamoUpdateBuilder {
 
@@ -43,19 +44,7 @@ export class DynamoUpdateBuilder {
             return this;
         }
 
-        if (typeof value === 'string') {
-            return this.updateString(key, value);
-        }
-
-        if (value instanceof Date) {
-            return this.updateString(key, value.toISOString());
-        }
-
-        if (Boolean(value.toString)) {
-            return this.updateString(key, value.toString());
-        }
-
-        return this.updateString(key, String(value));
+        return this.updateString(key, convertToStringObject(value));
     }
 
     public updateString(key: string, value: string): this {
