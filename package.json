@@ -16,7 +16,7 @@
     "@sudoo/io": "^1.8.0",
     "@sudoo/mock": "^1.5.0",
     "@sudoo/triforce": "^2.9.27",
-    "aws-sdk": "^2.934.0"
+    "aws-sdk": "^2.939.0"
   },
   "nyc": {
     "extension": [
