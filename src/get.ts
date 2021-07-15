@@ -6,6 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
+import { buildKeyExpression } from "./expression";
 
 export class DynamoGetBuilder {
 
@@ -40,18 +41,7 @@ export class DynamoGetBuilder {
 
         return {
             TableName: this._tableName,
-            Key: this._buildKeys(),
+            Key: buildKeyExpression(this._where),
         };
-    }
-
-    private _buildKeys(): Record<string, string> {
-
-        return this._where.reduce((previous: Record<string, string>, current: DynamoRecord) => {
-
-            return {
-                ...previous,
-                [current.key]: current.value,
-            };
-        }, {} as Record<string, string>);
     }
 }

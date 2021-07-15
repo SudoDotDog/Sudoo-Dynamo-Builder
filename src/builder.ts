@@ -24,6 +24,7 @@ export class DynamoBuilder {
     }
 
     public delete(): DynamoDeleteBuilder {
+
         return DynamoDeleteBuilder.create(this._tableName);
     }
 
