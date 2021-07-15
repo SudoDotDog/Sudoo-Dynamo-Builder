@@ -4,6 +4,8 @@
  * @description Index
  */
 
+export * from "./batch-delete";
+export * from "./batch-put";
 export * from "./builder";
 export * from "./declare";
 export * from "./delete";

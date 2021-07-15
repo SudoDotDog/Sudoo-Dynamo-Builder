@@ -7,7 +7,6 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
-import { convertToStringObject } from "./util";
 
 export class DynamoPutBuilder extends DynamoBaseBuilder {
 
@@ -33,10 +32,10 @@ export class DynamoPutBuilder extends DynamoBaseBuilder {
             return this;
         }
 
-        return this.addItemString(key, convertToStringObject(value));
+        return this.addItemEnsure(key, value);
     }
 
-    public addItemString(key: string, value: string): this {
+    public addItemEnsure(key: string, value: string): this {
 
         this._items.push({
             key,

@@ -4,6 +4,8 @@
  * @description Builder
  */
 
+import { DynamoBatchDeleteBuilder } from "./batch-delete";
+import { DynamoBatchPutBuilder } from "./batch-put";
 import { DynamoDeleteBuilder } from "./delete";
 import { DynamoGetBuilder } from "./get";
 import { DynamoPutBuilder } from "./put";
@@ -21,6 +23,16 @@ export class DynamoBuilder {
     private constructor(tableName: string) {
 
         this._tableName = tableName;
+    }
+
+    public batchDelete(): DynamoBatchDeleteBuilder {
+
+        return DynamoBatchDeleteBuilder.create(this._tableName);
+    }
+
+    public batchPut(): DynamoBatchPutBuilder {
+
+        return DynamoBatchPutBuilder.create(this._tableName);
     }
 
     public delete(): DynamoDeleteBuilder {
