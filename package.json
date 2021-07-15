@@ -1,7 +1,7 @@
 {
   "name": "@sudoo/dynamo-builder",
-  "version": "1.1.0",
-  "description": ":whale2: DynamoDB query builder for Node ",
+  "version": "1.2.0",
+  "description": "DynamoDB query builder for Node ",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SudoDotDog/Sudoo-Dynamo-Builder.git"
@@ -13,10 +13,11 @@
   },
   "homepage": "https://github.com/SudoDotDog/Sudoo-Dynamo-Builder#readme",
   "devDependencies": {
-    "@sudoo/io": "^1.8.0",
+    "@sudoo/build-utils": "^1.0.0",
+    "@sudoo/license": "^1.1.0",
     "@sudoo/mock": "^1.5.0",
-    "@sudoo/triforce": "^2.9.27",
-    "aws-sdk": "^2.943.0"
+    "@sudoo/triforce": "^2.9.28",
+    "aws-sdk": "^2.947.0"
   },
   "nyc": {
     "extension": [

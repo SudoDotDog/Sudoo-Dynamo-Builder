@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40sudoo%2Fdynamo-builder.svg)](https://www.npmjs.com/package/@sudoo/dynamo-builder)
 [![downloads](https://img.shields.io/npm/dm/@sudoo/dynamo-builder.svg)](https://www.npmjs.com/package/@sudoo/dynamo-builder)
 
-:whale2: DynamoDB query builder for Node 
+DynamoDB query builder for Node 
 
 ## Install
 
