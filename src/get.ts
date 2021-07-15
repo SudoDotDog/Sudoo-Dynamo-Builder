@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
-import { buildKeyExpression } from "./expression";
+import { buildDynamoKey } from "./expression";
 
 export class DynamoGetBuilder {
 
@@ -41,7 +41,7 @@ export class DynamoGetBuilder {
 
         return {
             TableName: this._tableName,
-            Key: buildKeyExpression(this._where),
+            Key: buildDynamoKey(this._where),
         };
     }
 }

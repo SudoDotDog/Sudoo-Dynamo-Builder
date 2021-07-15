@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoRecord } from "./declare";
-import { buildKeyExpression } from "./expression";
+import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoExpression, buildDynamoKey } from "./expression";
 import { convertToStringObject } from "./util";
 
 export class DynamoUpdateBuilder {
@@ -63,16 +63,16 @@ export class DynamoUpdateBuilder {
 
             return {
                 TableName: this._tableName,
-                Key: buildKeyExpression(this._where),
+                Key: buildDynamoKey(this._where),
             };
         }
 
         return {
             TableName: this._tableName,
-            Key: buildKeyExpression(this._where),
-            UpdateExpression: this._buildUpdateExpression(),
-            ExpressionAttributeNames: this._buildExpressionAttributeNames(),
-            ExpressionAttributeValues: this._buildExpressionAttributeValues(),
+            Key: buildDynamoKey(this._where),
+            UpdateExpression: buildDynamoExpression(this._update),
+            ExpressionAttributeNames: buildDynamoAttributeNames(this._update),
+            ExpressionAttributeValues: buildDynamoAttributeValues(this._update),
         };
     }
 
@@ -84,58 +84,5 @@ export class DynamoUpdateBuilder {
             }
         }
         return false;
-    }
-
-    private _buildUpdateExpression(): string {
-
-        const expressionStack: string[] = [];
-
-        for (const record of this._update) {
-
-            if (typeof record.value !== 'undefined') {
-
-                if (expressionStack.length > 0) {
-                    expressionStack.push(', ');
-                }
-
-                expressionStack.push(`#${record.key} = :${record.key}`);
-            }
-        }
-
-        if (expressionStack.length > 0) {
-            expressionStack.unshift('set ');
-        }
-
-        return expressionStack.join('');
-    }
-
-    private _buildExpressionAttributeNames(): Record<string, string> {
-
-        const attributeNames: Record<string, string> = {};
-
-        for (const record of this._update) {
-
-            if (typeof record.value !== 'undefined') {
-
-                attributeNames[`#${record.key}`] = record.key;
-            }
-        }
-
-        return attributeNames;
-    }
-
-    private _buildExpressionAttributeValues(): Record<string, string> {
-
-        const attributeValues: Record<string, string> = {};
-
-        for (const record of this._update) {
-
-            if (typeof record.value !== 'undefined') {
-
-                attributeValues[`:${record.key}`] = record.value;
-            }
-        }
-
-        return attributeValues;
     }
 }
