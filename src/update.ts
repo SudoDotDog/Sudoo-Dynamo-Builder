@@ -8,7 +8,6 @@ import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoExpression, buildDynamoKey } from "./expression";
-import { convertToStringObject } from "./util";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
@@ -48,10 +47,10 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
             return this;
         }
 
-        return this.updateString(key, convertToStringObject(value));
+        return this.updateEnsure(key, value);
     }
 
-    public updateString(key: string, value: string): this {
+    public updateEnsure(key: string, value: string): this {
 
         this._update.push({
             key,

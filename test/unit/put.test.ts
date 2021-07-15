@@ -28,6 +28,9 @@ describe('Given {DynamoPutBuilder} class', (): void => {
             Item: {
                 key: 'value',
             },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.PutItemInput);
     });
 });

@@ -28,6 +28,9 @@ describe('Given {DynamoGetBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.GetItemInput);
     });
 });

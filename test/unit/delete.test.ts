@@ -28,15 +28,18 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
-        } as DynamoDB.DocumentClient.UpdateItemInput);
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
     });
 
-    it('should be able to create one update input', (): void => {
+    it('should be able to create one delete input', (): void => {
 
         const tableName: string = chance.string();
 
         const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.UpdateItemInput = builder
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key', 'value')
             .condition('key', 'value')
             .build();
@@ -53,15 +56,18 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             ExpressionAttributeValues: {
                 ':key': 'value',
             },
-        } as DynamoDB.DocumentClient.UpdateItemInput);
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
     });
 
-    it('should be able to create multiple update input', (): void => {
+    it('should be able to create multiple delete input', (): void => {
 
         const tableName: string = chance.string();
 
         const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.UpdateItemInput = builder
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key', 'value')
             .condition('key1', 'value')
             .condition('key2', 'value')
@@ -84,6 +90,9 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
                 ':key2': 'value',
                 ':key3': 'value',
             },
-        } as DynamoDB.DocumentClient.UpdateItemInput);
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
     });
 });

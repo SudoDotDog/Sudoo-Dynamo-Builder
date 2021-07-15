@@ -28,6 +28,9 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
 
@@ -53,6 +56,9 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
             ExpressionAttributeValues: {
                 ':key': 'value',
             },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
 
@@ -84,6 +90,9 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
                 ':key2': 'value',
                 ':key3': 'value',
             },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
 });
