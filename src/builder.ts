@@ -4,6 +4,7 @@
  * @description Builder
  */
 
+import { DynamoDeleteBuilder } from "./delete";
 import { DynamoGetBuilder } from "./get";
 import { DynamoPutBuilder } from "./put";
 import { DynamoUpdateBuilder } from "./update";
@@ -20,6 +21,10 @@ export class DynamoBuilder {
     private constructor(tableName: string) {
 
         this._tableName = tableName;
+    }
+
+    public delete(): DynamoDeleteBuilder {
+        return DynamoDeleteBuilder.create(this._tableName);
     }
 
     public get(): DynamoGetBuilder {
