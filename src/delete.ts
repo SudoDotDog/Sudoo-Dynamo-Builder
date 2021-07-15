@@ -62,12 +62,14 @@ export class DynamoDeleteBuilder {
         if (!this._hasCondition()) {
 
             return {
+
                 TableName: this._tableName,
                 Key: buildDynamoKey(this._where),
             };
         }
 
         return {
+
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
             ConditionExpression: buildDynamoExpression(this._condition),

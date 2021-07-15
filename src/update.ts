@@ -62,12 +62,14 @@ export class DynamoUpdateBuilder {
         if (!this._hasContent()) {
 
             return {
+
                 TableName: this._tableName,
                 Key: buildDynamoKey(this._where),
             };
         }
 
         return {
+
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
             UpdateExpression: buildDynamoExpression(this._update),
