@@ -5,10 +5,11 @@
  */
 
 import { DynamoDB } from "aws-sdk";
+import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { convertToStringObject } from "./util";
 
-export class DynamoPutBuilder {
+export class DynamoPutBuilder extends DynamoBaseBuilder {
 
     public static create(tableName: string): DynamoPutBuilder {
 
@@ -20,6 +21,8 @@ export class DynamoPutBuilder {
     private readonly _items: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
+
+        super();
 
         this._tableName = tableName;
     }
@@ -45,8 +48,10 @@ export class DynamoPutBuilder {
     public build(): DynamoDB.DocumentClient.PutItemInput {
 
         return {
+
             TableName: this._tableName,
             Item: this._buildItems(),
+            ...this._buildReturnParameters(),
         };
     }
 

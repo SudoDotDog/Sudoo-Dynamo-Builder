@@ -5,11 +5,12 @@
  */
 
 import { DynamoDB } from "aws-sdk";
+import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoExpression, buildDynamoKey } from "./expression";
 import { convertToStringObject } from "./util";
 
-export class DynamoUpdateBuilder {
+export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
     public static create(tableName: string): DynamoUpdateBuilder {
 
@@ -22,6 +23,8 @@ export class DynamoUpdateBuilder {
     private readonly _update: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
+
+        super();
 
         this._tableName = tableName;
     }
@@ -65,6 +68,7 @@ export class DynamoUpdateBuilder {
 
                 TableName: this._tableName,
                 Key: buildDynamoKey(this._where),
+                ...this._buildReturnParameters(),
             };
         }
 
@@ -75,6 +79,7 @@ export class DynamoUpdateBuilder {
             UpdateExpression: buildDynamoExpression(this._update),
             ExpressionAttributeNames: buildDynamoAttributeNames(this._update),
             ExpressionAttributeValues: buildDynamoAttributeValues(this._update),
+            ...this._buildReturnParameters(),
         };
     }
 

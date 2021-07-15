@@ -27,17 +27,24 @@ export type DynamoUpdateRemoveRecord = {
     readonly key: string;
 };
 
+export type DynamoReturnParameters = {
+
+    ReturnConsumedCapacity: DYNAMO_RETURN_CONSUMED_CAPACITY;
+    ReturnItemCollectionMetrics: DYNAMO_RETURN_ITEM_COLLECTION_METRICS;
+    ReturnValues: DYNAMO_RETURN_VALUES;
+};
+
 export enum DYNAMO_RETURN_CONSUMED_CAPACITY {
 
     INDEXES = "INDEXES",
     TOTAL = "TOTAL",
-    NONE = "NONE"
+    NONE = "NONE", // Default
 }
 
 export enum DYNAMO_RETURN_ITEM_COLLECTION_METRICS {
 
     SIZE = "SIZE",
-    NONE = "NONE"
+    NONE = "NONE", // Default
 }
 
 export enum DYNAMO_RETURN_VALUES {
@@ -46,5 +53,5 @@ export enum DYNAMO_RETURN_VALUES {
     UPDATED_OLD = "UPDATED_OLD",
     ALL_NEW = "ALL_NEW",
     UPDATED_NEW = "UPDATED_NEW",
-    NONE = "NONE"
+    NONE = "NONE", // Default
 }

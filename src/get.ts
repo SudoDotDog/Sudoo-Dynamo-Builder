@@ -5,10 +5,11 @@
  */
 
 import { DynamoDB } from "aws-sdk";
+import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { buildDynamoKey } from "./expression";
 
-export class DynamoGetBuilder {
+export class DynamoGetBuilder extends DynamoBaseBuilder {
 
     public static create(tableName: string): DynamoGetBuilder {
 
@@ -20,6 +21,8 @@ export class DynamoGetBuilder {
     private readonly _where: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
+
+        super();
 
         this._tableName = tableName;
     }
@@ -40,8 +43,10 @@ export class DynamoGetBuilder {
     public build(): DynamoDB.DocumentClient.GetItemInput {
 
         return {
+
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
+            ...this._buildReturnParameters(),
         };
     }
 }
