@@ -10,16 +10,12 @@ export type DynamoRecord = {
     readonly value: string;
 };
 
-export type DynamoUpdateSetRecord = {
+export type DynamoSearchRecord = {
 
     readonly key: string;
     readonly value: string;
-};
 
-export type DynamoUpdateAddRecord = {
-
-    readonly key: string;
-    readonly value: string[];
+    readonly operator: "=" | "!=" | ">=" | "<=" | ">" | "<";
 };
 
 export type DynamoUpdateRemoveRecord = {
