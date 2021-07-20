@@ -5,9 +5,10 @@
  */
 
 import { DynamoDB } from "aws-sdk";
+import { buildDynamoSetAttributeNames, buildDynamoSetAttributeValues, buildDynamoSetExpression } from ".";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
-import { buildDynamoKey, buildDynamoSetAttributeNames, buildDynamoSetAttributeValues, buildDynamoSetExpression } from "./expression/expression";
+import { buildDynamoKey } from "./expression/expression";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 

@@ -7,7 +7,8 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoSearchCombination, DynamoSearchOperator } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildSingletonCombination } from "./expression/expression";
+import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
+import { buildSingletonCombination } from "./expression/expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -59,8 +60,8 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
             TableName: this._tableName,
             FilterExpression: buildDynamoConditionExpression(this._filter),
-            ExpressionAttributeNames: buildDynamoAttributeNames(this._filter),
-            ExpressionAttributeValues: buildDynamoAttributeValues(this._filter),
+            ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._filter),
+            ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._filter),
             ...this._buildReturnParameters(),
         };
     }
