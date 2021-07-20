@@ -53,11 +53,35 @@ export const buildDynamoSetAttributeNames = (records: DynamoRecord[]): Record<st
 
 export const buildDynamoSetAttributeValues = (records: DynamoRecord[]): Record<string, string> => {
 
-    const attributeValues: Record<string, string> = {};
+    const mappedAttributeValues: Record<string, string[]> = {};
 
     for (const record of records) {
         if (typeof record.value !== 'undefined') {
-            attributeValues[`:${record.key}`] = record.value;
+
+            const keyHash: string = `:${record.key}`;
+            if (Array.isArray(mappedAttributeValues[keyHash])) {
+                mappedAttributeValues[keyHash].push(record.value);
+            } else {
+                mappedAttributeValues[keyHash] = [record.value];
+            }
+        }
+    }
+
+    const attributeValues: Record<string, string> = {};
+    const keys: string[] = Object.keys(mappedAttributeValues);
+
+    for (const key of keys) {
+
+        const values: string[] = mappedAttributeValues[key];
+        if (values.length === 1) {
+
+            attributeValues[key] = values[0];
+        } else {
+
+            for (let i = 0; i < values.length; i++) {
+                const fixedKey: string = `:${key}-${i}`;
+                attributeValues[fixedKey] = values[i];
+            }
         }
     }
     return attributeValues;
@@ -107,7 +131,7 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
             if (typeof record.value !== 'undefined') {
 
                 if (recordsStack.length > 0 && !andJoined) {
-                    recordsStack.push(` AND `);
+                    expressionStack.push(` AND `);
                     andJoined = true;
                 }
 
