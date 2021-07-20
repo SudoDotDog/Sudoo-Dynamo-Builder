@@ -10,12 +10,14 @@ export type DynamoRecord = {
     readonly value: string;
 };
 
+export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<";
+
 export type DynamoSearchRecord = {
 
     readonly key: string;
     readonly value: string;
 
-    readonly operator: "=" | "!=" | ">=" | "<=" | ">" | "<";
+    readonly operator: DynamoSearchOperator;
 };
 
 export type DynamoUpdateRemoveRecord = {
