@@ -61,6 +61,12 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
+    public conditionWith(combination: DynamoSearchCombination): this {
+
+        this._condition.push(combination);
+        return this;
+    }
+
     public build(): DynamoDB.DocumentClient.DeleteItemInput {
 
         if (!this._hasCondition()) {

@@ -47,6 +47,12 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return this;
     }
 
+    public filterWith(combination: DynamoSearchCombination): this {
+
+        this._filter.push(combination);
+        return this;
+    }
+
     public build(): DynamoDB.DocumentClient.ScanInput {
 
         return {
