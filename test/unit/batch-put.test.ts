@@ -36,7 +36,6 @@ describe('Given {DynamoBatchPutBuilder} class', (): void => {
             })
             .build();
 
-
         expect(input).to.be.deep.equal({
 
             RequestItems: {
