@@ -7,7 +7,8 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord, DynamoSearchCombination, DynamoSearchOperator } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildDynamoKey, buildSingletonCombination, expressionHasCondition } from "./expression";
+import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
+import { buildDynamoKey, buildSingletonCombination, expressionHasCondition } from "./expression/expression";
 
 export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
@@ -84,8 +85,8 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
             ConditionExpression: buildDynamoConditionExpression(this._condition),
-            ExpressionAttributeNames: buildDynamoAttributeNames(this._condition),
-            ExpressionAttributeValues: buildDynamoAttributeValues(this._condition),
+            ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._condition),
+            ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._condition),
             ...this._buildReturnParameters(),
         };
     }

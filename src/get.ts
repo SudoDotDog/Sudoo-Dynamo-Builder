@@ -7,7 +7,7 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
-import { buildDynamoKey } from "./expression";
+import { buildDynamoKey } from "./expression/expression";
 
 export class DynamoGetBuilder extends DynamoBaseBuilder {
 

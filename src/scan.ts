@@ -7,7 +7,7 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoSearchCombination, DynamoSearchOperator } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildSingletonCombination } from "./expression";
+import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildSingletonCombination } from "./expression/expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
