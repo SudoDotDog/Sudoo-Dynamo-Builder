@@ -4,30 +4,35 @@
  * @description Stack
  */
 
-import { DynamoSearchCombination } from "../declare";
+import { DynamoRecord, DynamoSearchCombination, DynamoSearchRecord } from "../declare";
 
 export type PreParseKeyProperty = {
 
     duplicate: boolean;
 };
 
-export const preParseCombinationKeyProperty = (combinations: DynamoSearchCombination[]): Record<string, PreParseKeyProperty> => {
+export const preParseRecordsKeyProperty = (records: Array<DynamoSearchRecord | DynamoRecord>): Record<string, PreParseKeyProperty> => {
 
     const result: Record<string, PreParseKeyProperty> = {};
 
-    for (const combination of combinations) {
+    for (const record of records) {
 
-        for (const record of combination.records) {
-
-            const key = record.key;
-            if (result[key]) {
-                result[key].duplicate = true;
-            } else {
-                result[key] = {
-                    duplicate: false
-                };
-            }
+        const key = record.key;
+        if (result[key]) {
+            result[key].duplicate = true;
+        } else {
+            result[key] = {
+                duplicate: false
+            };
         }
     }
     return result;
+};
+
+export const extractRecordsFromSearchCombination = (combinations: DynamoSearchCombination[]): DynamoSearchRecord[] => {
+
+    return combinations.reduce((result: DynamoSearchRecord[], combination: DynamoSearchCombination) => {
+
+        return result.concat(combination.records);
+    }, []);
 };

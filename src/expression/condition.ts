@@ -5,6 +5,7 @@
  */
 
 import { DynamoSearchCombination, DynamoSearchRecord } from "../declare";
+import { ExpressionCorrectKeyHandler } from "./correct-key";
 
 export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
 
@@ -69,36 +70,15 @@ export const buildDynamoConditionAttributeNames = (combinations: DynamoSearchCom
 
 export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCombination[]): Record<string, string> => {
 
-    const mappedAttributeValues: Record<string, string[]> = {};
+    const attributeValues: Record<string, string> = {};
+    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
 
     for (const combination of combinations) {
         for (const record of combination.records) {
             if (typeof record.value !== 'undefined') {
 
-                const keyHash: string = `:${record.key}`;
-                if (Array.isArray(mappedAttributeValues[keyHash])) {
-                    mappedAttributeValues[keyHash].push(record.value);
-                } else {
-                    mappedAttributeValues[keyHash] = [record.value];
-                }
-            }
-        }
-    }
-
-    const attributeValues: Record<string, string> = {};
-    const keys: string[] = Object.keys(mappedAttributeValues);
-
-    for (const key of keys) {
-
-        const values: string[] = mappedAttributeValues[key];
-        if (values.length === 1) {
-
-            attributeValues[key] = values[0];
-        } else {
-
-            for (let i = 0; i < values.length; i++) {
-                const fixedKey: string = `:${key}-${i}`;
-                attributeValues[fixedKey] = values[i];
+                const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
+                attributeValues[correctKeyValue] = record.value;
             }
         }
     }

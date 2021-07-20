@@ -4,22 +4,28 @@
  * @description Correct Key
  */
 
-import { DynamoSearchCombination } from "../declare";
-import { preParseCombinationKeyProperty, PreParseKeyProperty } from "./stack";
+import { DynamoRecord, DynamoSearchCombination, DynamoSearchRecord } from "../declare";
+import { extractRecordsFromSearchCombination, PreParseKeyProperty, preParseRecordsKeyProperty } from "./stack";
 
 export class ExpressionCorrectKeyHandler {
 
-    public static create(combinations: DynamoSearchCombination[]): ExpressionCorrectKeyHandler {
+    public static fromCombinations(combinations: DynamoSearchCombination[]): ExpressionCorrectKeyHandler {
 
-        return new ExpressionCorrectKeyHandler(combinations);
+        const records: DynamoSearchRecord[] = extractRecordsFromSearchCombination(combinations);
+        return new ExpressionCorrectKeyHandler(records);
+    }
+
+    public static fromRecords(records: Array<DynamoSearchRecord | DynamoRecord>): ExpressionCorrectKeyHandler {
+
+        return new ExpressionCorrectKeyHandler(records);
     }
 
     private _preParseProperties: Record<string, PreParseKeyProperty>;
     private _keyCounters: Record<string, number>;
 
-    private constructor(combinations: DynamoSearchCombination[]) {
+    private constructor(records: Array<DynamoSearchRecord | DynamoRecord>) {
 
-        this._preParseProperties = preParseCombinationKeyProperty(combinations);
+        this._preParseProperties = preParseRecordsKeyProperty(records);
         this._keyCounters = {};
     }
 
