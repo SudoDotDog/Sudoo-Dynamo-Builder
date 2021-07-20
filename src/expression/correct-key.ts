@@ -47,13 +47,13 @@ export class ExpressionCorrectKeyHandler {
 
         if (typeof this._keyCounters[key] === 'number') {
 
-            const currentKey: string = `::${key}-${this._keyCounters[key] + 1}`;
+            const currentKey: string = `_${key}_${this._keyCounters[key] + 1}`;
             this._keyCounters[key]++;
             return currentKey;
         }
 
         this._keyCounters[key] = 0;
-        return `::${key}-0`;
+        return `_${key}_0`;
     }
 
     public reset(): this {
