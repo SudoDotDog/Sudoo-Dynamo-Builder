@@ -17,7 +17,7 @@ export const buildDynamoKey = (records: DynamoRecord[]): Record<string, string> 
     }, {} as Record<string, string>);
 };
 
-export const buildDynamoExpression = (records: DynamoRecord[]): string => {
+export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
 
     const expressionStack: string[] = [];
 
@@ -36,7 +36,24 @@ export const buildDynamoExpression = (records: DynamoRecord[]): string => {
     if (expressionStack.length > 0) {
         expressionStack.unshift('set ');
     }
+    return expressionStack.join('');
+};
 
+export const buildDynamoConditionExpression = (records: DynamoRecord[]): string => {
+
+    const expressionStack: string[] = [];
+
+    for (const record of records) {
+
+        if (typeof record.value !== 'undefined') {
+
+            if (expressionStack.length > 0) {
+                expressionStack.push(', ');
+            }
+
+            expressionStack.push(`#${record.key} = :${record.key}`);
+        }
+    }
     return expressionStack.join('');
 };
 

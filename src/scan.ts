@@ -7,7 +7,7 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoExpression } from "./expression";
+import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression } from "./expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -50,7 +50,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return {
 
             TableName: this._tableName,
-            FilterExpression: buildDynamoExpression(this._filter),
+            FilterExpression: buildDynamoConditionExpression(this._filter),
             ExpressionAttributeNames: buildDynamoAttributeNames(this._filter),
             ExpressionAttributeValues: buildDynamoAttributeValues(this._filter),
             ...this._buildReturnParameters(),

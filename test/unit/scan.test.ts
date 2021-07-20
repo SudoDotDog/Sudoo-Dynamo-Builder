@@ -14,7 +14,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
     const chance: Chance.Chance = new Chance('dynamo-builder-scan');
 
-    it('should be able to create complex scan input', (): void => {
+    it('should be able to create simple scan input', (): void => {
 
         const tableName: string = chance.string();
 
@@ -25,9 +25,13 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         expect(input).to.be.deep.equal({
             TableName: tableName,
-            Key: {
-                key: 'value',
+            ExpressionAttributeNames: {
+                '#key': 'key',
             },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key = :key',
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
