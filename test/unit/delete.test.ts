@@ -113,15 +113,15 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
-            ConditionExpression: '#key1 = :key1 AND #key2 = _key2_0 AND #key2 = _key2_1',
+            ConditionExpression: '#key1 = :key1 AND #key2 = :__key2_0 AND #key2 = :__key2_1',
             ExpressionAttributeNames: {
                 '#key1': 'key1',
                 '#key2': 'key2',
             },
             ExpressionAttributeValues: {
                 ':key1': 'value',
-                '_key2_0': 'value',
-                '_key2_1': 'value',
+                ':__key2_0': 'value',
+                ':__key2_1': 'value',
             },
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
