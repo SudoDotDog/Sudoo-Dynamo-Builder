@@ -10,6 +10,7 @@ import { ExpressionCorrectKeyHandler } from "./correct-key";
 export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
 
     const expressionStack: string[] = [];
+    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromRecords(records);
 
     for (const record of records) {
 
@@ -19,7 +20,9 @@ export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
                 expressionStack.push(', ');
             }
 
-            expressionStack.push(`#${record.key} = :${record.key}`);
+            const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
+            const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
+            expressionStack.push(`${keyKey} = ${valueKey}`);
         }
     }
 
@@ -32,10 +35,13 @@ export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
 export const buildDynamoSetAttributeNames = (records: DynamoRecord[]): Record<string, string> => {
 
     const attributeNames: Record<string, string> = {};
+    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromRecords(records);
 
     for (const record of records) {
         if (typeof record.value !== 'undefined') {
-            attributeNames[`#${record.key}`] = record.key;
+
+            const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
+            attributeNames[keyKey] = record.key;
         }
     }
     return attributeNames;

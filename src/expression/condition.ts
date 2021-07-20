@@ -10,6 +10,7 @@ import { ExpressionCorrectKeyHandler } from "./correct-key";
 export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
 
     const expressionStack: string[] = [];
+    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
 
     combination: for (const combination of combinations) {
 
@@ -28,7 +29,9 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
                         expressionStack.push(' AND ');
                     }
 
-                    expressionStack.push(`#${record.key} ${record.operator} :${record.key}`);
+                    const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
+                    const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
+                    expressionStack.push(`${keyKey} ${record.operator} ${valueKey}`);
                 }
             }
             continue combination;
@@ -45,7 +48,9 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
                     andJoined = true;
                 }
 
-                recordsStack.push(`#${record.key} ${record.operator} :${record.key}`);
+                const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
+                const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
+                recordsStack.push(`${keyKey} ${record.operator} ${valueKey}`);
             }
         }
         expressionStack.push(`(${recordsStack.join(` ${combination.relation} `)})`);
@@ -57,11 +62,14 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
 export const buildDynamoConditionAttributeNames = (combinations: DynamoSearchCombination[]): Record<string, string> => {
 
     const attributeNames: Record<string, string> = {};
+    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
 
     for (const combination of combinations) {
         for (const record of combination.records) {
             if (typeof record.value !== 'undefined') {
-                attributeNames[`#${record.key}`] = record.key;
+
+                const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
+                attributeNames[keyKey] = record.key;
             }
         }
     }

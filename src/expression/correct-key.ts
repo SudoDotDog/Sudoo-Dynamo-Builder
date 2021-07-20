@@ -29,6 +29,11 @@ export class ExpressionCorrectKeyHandler {
         this._keyCounters = {};
     }
 
+    public getCorrectKeyKey(key: string): string {
+
+        return `#${key}`;
+    }
+
     public getCorrectValueKey(key: string): string {
 
         const property: PreParseKeyProperty | undefined = this._preParseProperties[key];
@@ -49,5 +54,11 @@ export class ExpressionCorrectKeyHandler {
 
         this._keyCounters[key] = 0;
         return `::${key}-0`;
+    }
+
+    public reset(): this {
+
+        this._keyCounters = {};
+        return this;
     }
 }
