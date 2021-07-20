@@ -49,7 +49,7 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
-            ConditionExpression: 'set #key = :key',
+            ConditionExpression: '#key = :key',
             ExpressionAttributeNames: {
                 '#key': 'key',
             },
@@ -79,7 +79,7 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
-            ConditionExpression: 'set #key1 = :key1, #key2 = :key2, #key3 = :key3',
+            ConditionExpression: '#key1 = :key1, #key2 = :key2, #key3 = :key3',
             ExpressionAttributeNames: {
                 '#key1': 'key1',
                 '#key2': 'key2',
