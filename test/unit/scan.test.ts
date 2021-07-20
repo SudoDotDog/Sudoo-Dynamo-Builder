@@ -135,4 +135,35 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.ScanInput);
     });
+
+    it('should be able to create scan with empty input', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .filter('out', 'start', '>')
+            .filter('out', 'end', '<')
+            .filter('place', 'place')
+            .filter('notUsed')
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#out': 'out',
+                '#place': 'place',
+            },
+            ExpressionAttributeValues: {
+                '::out-0': 'start',
+                '::out-1': 'end',
+                ':place': 'place',
+            },
+            FilterExpression: '#out > ::out-0 AND #out < ::out-1 AND #place = :place',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
 });
