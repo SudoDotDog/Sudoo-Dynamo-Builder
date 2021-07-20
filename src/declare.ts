@@ -20,6 +20,14 @@ export type DynamoSearchRecord = {
     readonly operator: DynamoSearchOperator;
 };
 
+export type DynamoSearchCombinationRelation = "AND" | "OR";
+
+export type DynamoSearchCombination = {
+
+    readonly records: DynamoSearchRecord[];
+    readonly relation: DynamoSearchCombinationRelation;
+};
+
 export type DynamoUpdateRemoveRecord = {
 
     readonly key: string;

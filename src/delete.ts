@@ -6,8 +6,8 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord, DynamoSearchOperator, DynamoSearchRecord } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildDynamoKey } from "./expression";
+import { DynamoRecord, DynamoSearchCombination, DynamoSearchOperator } from "./declare";
+import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildDynamoKey, buildSingletonCombination, expressionHasCondition } from "./expression";
 
 export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
@@ -19,7 +19,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
     private readonly _tableName: string;
 
     private readonly _where: DynamoRecord[] = [];
-    private readonly _condition: DynamoSearchRecord[] = [];
+    private readonly _condition: DynamoSearchCombination[] = [];
 
     private constructor(tableName: string) {
 
@@ -52,11 +52,12 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
     public conditionEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
 
-        this._condition.push({
+        const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             value,
             operator,
         });
+        this._condition.push(combination);
         return this;
     }
 
@@ -85,11 +86,6 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
     private _hasCondition(): boolean {
 
-        for (const record of this._condition) {
-            if (typeof record.value !== 'undefined') {
-                return true;
-            }
-        }
-        return false;
+        return expressionHasCondition(this._condition);
     }
 }

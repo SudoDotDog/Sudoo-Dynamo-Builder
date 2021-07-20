@@ -6,8 +6,8 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoSearchOperator, DynamoSearchRecord } from "./declare";
-import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression } from "./expression";
+import { DynamoSearchCombination, DynamoSearchOperator } from "./declare";
+import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression, buildSingletonCombination } from "./expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -18,7 +18,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _filter: DynamoSearchRecord[] = [];
+    private readonly _filter: DynamoSearchCombination[] = [];
 
     private constructor(tableName: string) {
 
@@ -38,11 +38,12 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     public filterEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
 
-        this._filter.push({
+        const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             value,
             operator,
         });
+        this._filter.push(combination);
         return this;
     }
 

@@ -4,7 +4,7 @@
  * @description Expression
  */
 
-import { DynamoRecord, DynamoSearchRecord } from "./declare";
+import { DynamoRecord, DynamoSearchCombination, DynamoSearchRecord } from "./declare";
 
 export const buildDynamoKey = (records: DynamoRecord[]): Record<string, string> => {
 
@@ -39,50 +39,124 @@ export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
     return expressionStack.join('');
 };
 
-export const buildDynamoConditionExpression = (records: DynamoSearchRecord[]): string => {
-
-    const expressionStack: string[] = [];
-
-    for (const record of records) {
-
-        if (typeof record.value !== 'undefined') {
-
-            if (expressionStack.length > 0) {
-                expressionStack.push(' AND ');
-            }
-
-            expressionStack.push(`#${record.key} ${record.operator} :${record.key}`);
-        }
-    }
-    return expressionStack.join('');
-};
-
-export const buildDynamoAttributeNames = (records: DynamoRecord[]): Record<string, string> => {
+export const buildDynamoSetAttributeNames = (records: DynamoRecord[]): Record<string, string> => {
 
     const attributeNames: Record<string, string> = {};
 
     for (const record of records) {
-
         if (typeof record.value !== 'undefined') {
-
             attributeNames[`#${record.key}`] = record.key;
         }
     }
-
     return attributeNames;
 };
 
-export const buildDynamoAttributeValues = (records: DynamoRecord[]): Record<string, string> => {
+export const buildDynamoSetAttributeValues = (records: DynamoRecord[]): Record<string, string> => {
 
     const attributeValues: Record<string, string> = {};
 
     for (const record of records) {
-
         if (typeof record.value !== 'undefined') {
-
             attributeValues[`:${record.key}`] = record.value;
         }
     }
-
     return attributeValues;
+};
+
+export const buildSingletonCombination = (record: DynamoSearchRecord): DynamoSearchCombination => {
+
+    const combination: DynamoSearchCombination = {
+
+        records: [record],
+        relation: "OR",
+    };
+    return combination;
+};
+
+export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
+
+    const expressionStack: string[] = [];
+
+    combination: for (const combination of combinations) {
+
+        if (combination.records.length === 0) {
+            continue combination;
+        }
+
+        const records: DynamoSearchRecord[] = combination.records;
+        if (combination.records.length === 1) {
+
+            for (const record of records) {
+
+                if (typeof record.value !== 'undefined') {
+
+                    if (expressionStack.length > 0) {
+                        expressionStack.push(' AND ');
+                    }
+
+                    expressionStack.push(`#${record.key} ${record.operator} :${record.key}`);
+                }
+            }
+            continue combination;
+        }
+
+        const recordsStack: string[] = [];
+        for (const record of records) {
+
+            let andJoined: boolean = false;
+            if (typeof record.value !== 'undefined') {
+
+                if (recordsStack.length > 0 && !andJoined) {
+                    recordsStack.push(` AND `);
+                    andJoined = true;
+                }
+
+                recordsStack.push(`#${record.key} ${record.operator} :${record.key}`);
+            }
+        }
+        expressionStack.push(`(${recordsStack.join(` ${combination.relation} `)})`);
+    }
+
+    return expressionStack.join('');
+};
+
+export const buildDynamoAttributeNames = (combinations: DynamoSearchCombination[]): Record<string, string> => {
+
+    const attributeNames: Record<string, string> = {};
+
+    for (const combination of combinations) {
+        for (const record of combination.records) {
+            if (typeof record.value !== 'undefined') {
+                attributeNames[`#${record.key}`] = record.key;
+            }
+        }
+    }
+    return attributeNames;
+};
+
+export const buildDynamoAttributeValues = (combinations: DynamoSearchCombination[]): Record<string, string> => {
+
+    const attributeValues: Record<string, string> = {};
+
+    for (const combination of combinations) {
+        for (const record of combination.records) {
+            if (typeof record.value !== 'undefined') {
+                attributeValues[`:${record.key}`] = record.value;
+            }
+        }
+    }
+    return attributeValues;
+};
+
+export const expressionHasCondition = (combinations: DynamoSearchCombination[]): boolean => {
+
+    for (const combination of combinations) {
+
+        for (const record of combination.records) {
+            if (typeof record.value !== 'undefined') {
+                return true;
+            }
+        }
+    }
+    return false;
 };
