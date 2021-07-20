@@ -24,6 +24,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             .build();
 
         expect(input).to.be.deep.equal({
+
             TableName: tableName,
             ExpressionAttributeNames: {
                 '#key': 'key',
@@ -48,6 +49,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             .build();
 
         expect(input).to.be.deep.equal({
+
             TableName: tableName,
             ExpressionAttributeNames: {
                 '#key': 'key',
@@ -74,6 +76,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             .build();
 
         expect(input).to.be.deep.equal({
+
             TableName: tableName,
             ExpressionAttributeNames: {
                 '#key1': 'key1',
@@ -113,6 +116,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             .build();
 
         expect(input).to.be.deep.equal({
+
             TableName: tableName,
             ExpressionAttributeNames: {
                 '#key1': 'key1',
