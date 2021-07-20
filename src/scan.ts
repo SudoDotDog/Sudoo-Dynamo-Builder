@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord } from "./declare";
+import { DynamoSearchOperator, DynamoSearchRecord } from "./declare";
 import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoConditionExpression } from "./expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
@@ -18,7 +18,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _filter: DynamoRecord[] = [];
+    private readonly _filter: DynamoSearchRecord[] = [];
 
     private constructor(tableName: string) {
 
@@ -27,20 +27,21 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public filter(key: string, value?: any): this {
+    public filter(key: string, value?: any, operator: DynamoSearchOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.filterEnsure(key, value);
+        return this.filterEnsure(key, value, operator);
     }
 
-    public filterEnsure(key: string, value: string): this {
+    public filterEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
 
         this._filter.push({
             key,
             value,
+            operator,
         });
         return this;
     }

@@ -37,4 +37,28 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.ScanInput);
     });
+
+    it('should be able to create simple scan input with operator', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .filter('key', 'value', '>=')
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key': 'key',
+            },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key >= :key',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
 });
