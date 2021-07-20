@@ -95,4 +95,37 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.DeleteItemInput);
     });
+
+    it('should be able to create multiple delete input - duplicated key', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
+            .where('key', 'value')
+            .condition('key1', 'value')
+            .condition('key2', 'value')
+            .condition('key2', 'value')
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key: 'value',
+            },
+            ConditionExpression: '#key1 = :key1 AND #key2 = ::key2-0 AND #key2 = ::key2-1',
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value',
+                '::key2-0': 'value',
+                '::key2-1': 'value',
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
+    });
 });
