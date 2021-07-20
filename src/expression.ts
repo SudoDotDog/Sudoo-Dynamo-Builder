@@ -48,7 +48,7 @@ export const buildDynamoConditionExpression = (records: DynamoSearchRecord[]): s
         if (typeof record.value !== 'undefined') {
 
             if (expressionStack.length > 0) {
-                expressionStack.push(', ');
+                expressionStack.push(' AND ');
             }
 
             expressionStack.push(`#${record.key} ${record.operator} :${record.key}`);

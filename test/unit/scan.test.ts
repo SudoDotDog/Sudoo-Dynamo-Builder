@@ -61,4 +61,32 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.ScanInput);
     });
+
+    it('should be able to create simple scan input optional', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .filter('key1', 'value1')
+            .filter('key2', undefined)
+            .filter('key3', 'value3')
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key3': 'key3',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value1',
+                ':key3': 'value3',
+            },
+            FilterExpression: '#key1 = :key1 AND #key3 = :key3',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
 });

@@ -79,7 +79,7 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             Key: {
                 key: 'value',
             },
-            ConditionExpression: '#key1 = :key1, #key2 = :key2, #key3 = :key3',
+            ConditionExpression: '#key1 = :key1 AND #key2 = :key2 AND #key3 = :key3',
             ExpressionAttributeNames: {
                 '#key1': 'key1',
                 '#key2': 'key2',
