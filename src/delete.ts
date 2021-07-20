@@ -18,8 +18,8 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _where: DynamoSearchRecord[] = [];
-    private readonly _condition: DynamoRecord[] = [];
+    private readonly _where: DynamoRecord[] = [];
+    private readonly _condition: DynamoSearchRecord[] = [];
 
     private constructor(tableName: string) {
 
@@ -28,7 +28,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public where(key: string, value: string, operator: DynamoSearchOperator = '='): this {
+    public where(key: string, value: string): this {
 
         if (typeof value === 'undefined') {
             return this;
@@ -37,25 +37,25 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         this._where.push({
             key,
             value,
-            operator,
         });
         return this;
     }
 
-    public condition(key: string, value?: any): this {
+    public condition(key: string, value?: any, operator: DynamoSearchOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.conditionEnsure(key, value);
+        return this.conditionEnsure(key, value, operator);
     }
 
-    public conditionEnsure(key: string, value: string): this {
+    public conditionEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
 
         this._condition.push({
             key,
             value,
+            operator,
         });
         return this;
     }

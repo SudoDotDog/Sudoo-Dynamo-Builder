@@ -4,7 +4,7 @@
  * @description Expression
  */
 
-import { DynamoRecord } from "./declare";
+import { DynamoRecord, DynamoSearchRecord } from "./declare";
 
 export const buildDynamoKey = (records: DynamoRecord[]): Record<string, string> => {
 
@@ -39,7 +39,7 @@ export const buildDynamoSetExpression = (records: DynamoRecord[]): string => {
     return expressionStack.join('');
 };
 
-export const buildDynamoConditionExpression = (records: DynamoRecord[]): string => {
+export const buildDynamoConditionExpression = (records: DynamoSearchRecord[]): string => {
 
     const expressionStack: string[] = [];
 
@@ -51,7 +51,7 @@ export const buildDynamoConditionExpression = (records: DynamoRecord[]): string 
                 expressionStack.push(', ');
             }
 
-            expressionStack.push(`#${record.key} = :${record.key}`);
+            expressionStack.push(`#${record.key} ${record.operator} :${record.key}`);
         }
     }
     return expressionStack.join('');

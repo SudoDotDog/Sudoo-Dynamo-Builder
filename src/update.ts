@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord, DynamoSearchOperator, DynamoSearchRecord } from "./declare";
+import { DynamoRecord } from "./declare";
 import { buildDynamoAttributeNames, buildDynamoAttributeValues, buildDynamoKey, buildDynamoSetExpression } from "./expression";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
@@ -18,7 +18,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
-    private readonly _where: DynamoSearchRecord[] = [];
+    private readonly _where: DynamoRecord[] = [];
     private readonly _update: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
@@ -28,7 +28,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public where(key: string, value: string, operator: DynamoSearchOperator = '='): this {
+    public where(key: string, value: string): this {
 
         if (typeof value === 'undefined') {
             return this;
@@ -37,7 +37,6 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         this._where.push({
             key,
             value,
-            operator,
         });
         return this;
     }
