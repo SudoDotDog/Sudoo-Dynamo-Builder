@@ -5,6 +5,7 @@
  */
 
 import { DynamoBatchDeleteBuilder } from "./batch-delete";
+import { DynamoBatchGetBuilder } from "./batch-get";
 import { DynamoBatchPutBuilder } from "./batch-put";
 import { DynamoDeleteBuilder } from "./delete";
 import { DynamoGetBuilder } from "./get";
@@ -29,6 +30,11 @@ export class DynamoBuilder {
     public batchDelete(): DynamoBatchDeleteBuilder {
 
         return DynamoBatchDeleteBuilder.create(this._tableName);
+    }
+
+    public batchGet(): DynamoBatchGetBuilder {
+
+        return DynamoBatchGetBuilder.create(this._tableName);
     }
 
     public batchPut(): DynamoBatchPutBuilder {

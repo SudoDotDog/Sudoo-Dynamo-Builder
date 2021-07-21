@@ -30,16 +30,27 @@ export class DynamoBatchGetBuilder extends DynamoBaseBuilder {
 
     public singleKeyItem(key: string, value: string): this {
 
-        this._itemObjects.push([{
+        return this.multipleKeysItem([{
             key,
             value,
         }]);
-        return this;
     }
 
     public multipleKeysItem(records: DynamoRecord[]): this {
 
         this._itemObjects.push(records);
+        return this;
+    }
+
+    public singleKeyItemList(items: DynamoRecord[]): this {
+
+        this._itemObjects.push(...items.map((item: DynamoRecord) => [item]));
+        return this;
+    }
+
+    public multipleKeysItemList(records: DynamoRecord[][]): this {
+
+        this._itemObjects.push(...records);
         return this;
     }
 
