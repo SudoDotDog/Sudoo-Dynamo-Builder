@@ -7,7 +7,7 @@
 
 import { expect } from "chai";
 import * as Chance from "chance";
-import { DynamoBatchDeleteBuilder, DynamoBatchPutBuilder, DynamoBuilder, DynamoDeleteBuilder, DynamoGetBuilder, DynamoScanBuilder, DynamoUpdateBuilder } from "../../src";
+import { DynamoBatchDeleteBuilder, DynamoBatchGetBuilder, DynamoBatchPutBuilder, DynamoBuilder, DynamoDeleteBuilder, DynamoGetBuilder, DynamoScanBuilder, DynamoUpdateBuilder } from "../../src";
 
 describe('Given {DynamoBuilder} class', (): void => {
 
@@ -20,6 +20,15 @@ describe('Given {DynamoBuilder} class', (): void => {
         const batchDeleteBuilder: DynamoBatchDeleteBuilder = builder.batchDelete();
 
         expect(batchDeleteBuilder).to.be.an.instanceof(DynamoBatchDeleteBuilder);
+    });
+
+    it('should be able to construct batch get', (): void => {
+
+        const builder: DynamoBuilder = DynamoBuilder.create(chance.string());
+
+        const batchGetBuilder: DynamoBatchGetBuilder = builder.batchGet();
+
+        expect(batchGetBuilder).to.be.an.instanceof(DynamoBatchGetBuilder);
     });
 
     it('should be able to construct batch put', (): void => {

@@ -14,7 +14,7 @@ describe('Given {DynamoBatchPutBuilder} class', (): void => {
 
     const chance: Chance.Chance = new Chance('dynamo-builder-batch-put');
 
-    it('should be able to create empty input', (): void => {
+    it('should be able to create put input', (): void => {
 
         const tableName: string = chance.string();
 
