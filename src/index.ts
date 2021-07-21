@@ -6,6 +6,7 @@
 
 export * from "./base";
 export * from "./batch-delete";
+export * from "./batch-get";
 export * from "./batch-put";
 export * from "./builder";
 export * from "./declare";
