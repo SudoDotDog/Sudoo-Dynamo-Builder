@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoSearchCombination, DynamoSearchOperator } from "./declare";
+import { DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildSingletonCombination } from "./expression/expression";
 
@@ -28,21 +28,45 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public filter(key: string, value?: any, operator: DynamoSearchOperator = '='): this {
+    public simpleFilter(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.filterEnsure(key, value, operator);
+        return this.simpleFilterEnsure(key, value, operator);
     }
 
-    public filterEnsure(key: string, value: any, operator: DynamoSearchOperator = '='): this {
+    public simpleFilterEnsure(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
+
             key,
             value,
             operator,
+        });
+        this._filter.push(combination);
+        return this;
+    }
+
+    public between(key: string, greaterThan?: any, lessThan?: any): this {
+
+        if (typeof greaterThan === 'undefined'
+            || typeof lessThan === 'undefined') {
+            return this;
+        }
+
+        return this.betweenEnsure(key, greaterThan, lessThan);
+    }
+
+    public betweenEnsure(key: string, greaterThan: any, lessThan: any): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+
+            key,
+            greaterThan,
+            lessThan,
+            operator: 'between',
         });
         this._filter.push(combination);
         return this;

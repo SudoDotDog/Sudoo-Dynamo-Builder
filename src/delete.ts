@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord, DynamoSearchCombination, DynamoSearchOperator } from "./declare";
+import { DynamoRecord, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildDynamoKey, buildSingletonCombination, expressionHasCondition } from "./expression/expression";
 
@@ -42,16 +42,16 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public condition(key: string, value?: any, operator: DynamoSearchOperator = '='): this {
+    public simpleCondition(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.conditionEnsure(key, value, operator);
+        return this.simpleConditionEnsure(key, value, operator);
     }
 
-    public conditionEnsure(key: string, value: any, operator: DynamoSearchOperator = '='): this {
+    public simpleConditionEnsure(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,

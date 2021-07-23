@@ -32,7 +32,7 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
 
             for (const record of records) {
 
-                if (typeof record.value !== 'undefined') {
+                if (ensureSearchRecord(record)) {
 
                     if (expressionStack.length > 0) {
                         expressionStack.push(' AND ');
@@ -52,7 +52,7 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
         for (const record of records) {
 
             let andJoined: boolean = false;
-            if (typeof record.value !== 'undefined') {
+            if (ensureSearchRecord(record)) {
 
                 if (recordsStack.length > 0 && !andJoined) {
                     expressionStack.push(` AND `);
@@ -79,7 +79,7 @@ export const buildDynamoConditionAttributeNames = (combinations: DynamoSearchCom
 
     for (const combination of combinations) {
         for (const record of combination.records) {
-            if (typeof record.value !== 'undefined') {
+            if (ensureSearchRecord(record)) {
 
                 const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
                 attributeNames[keyKey] = record.key;
@@ -96,12 +96,45 @@ export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCo
 
     for (const combination of combinations) {
         for (const record of combination.records) {
-            if (typeof record.value !== 'undefined') {
+            if (ensureSearchRecord(record)) {
 
                 const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
-                attributeValues[correctKeyValue] = record.value;
+                // attributeValues[correctKeyValue] = record.value;
             }
         }
     }
     return attributeValues;
+};
+
+export const ensureSearchRecord = (record: DynamoSearchRecord): boolean => {
+
+    switch (record.operator) {
+        case '=':
+        case "<>":
+        case ">=":
+        case "<=":
+        case ">":
+        case "<":
+        case "contains":
+        case "begin-with":
+            return record.value !== 'undefined';
+        case "between":
+            return record.greaterThan !== 'undefined'
+                && record.lessThan !== 'undefined';
+        case "attribute-exist":
+        case "attribute-not-exist":
+            return true;
+        case "attribute-type":
+            return record.type === 'String'
+                || record.type === 'String-Set'
+                || record.type === 'Number'
+                || record.type === 'Number-Set'
+                || record.type === 'Binary'
+                || record.type === 'Binary-Set'
+                || record.type === 'Boolean'
+                || record.type === 'Null'
+                || record.type === 'List'
+                || record.type === 'Map';
+    }
+    return false;
 };

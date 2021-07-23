@@ -20,7 +20,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('key', 'value')
+            .simpleFilter('key', 'value')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -45,8 +45,8 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('key1', 'value1')
-            .filter('key2', 'value2', 'contains')
+            .simpleFilter('key1', 'value1')
+            .simpleFilter('key2', 'value2', 'contains')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -73,7 +73,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('key', 'value', '>=')
+            .simpleFilter('key', 'value', '>=')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -98,9 +98,9 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('key1', 'value1')
-            .filter('key2', undefined)
-            .filter('key3', 'value3')
+            .simpleFilter('key1', 'value1')
+            .simpleFilter('key2', undefined)
+            .simpleFilter('key3', 'value3')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -127,8 +127,8 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('key1', 'value1')
-            .filter('key1', 'value2', '<>')
+            .simpleFilter('key1', 'value1')
+            .simpleFilter('key1', 'value2', '<>')
             .filterWith({
                 records: [{
                     key: 'key3',
@@ -170,10 +170,10 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .filter('out', 'start', '>')
-            .filter('out', 'end', '<')
-            .filter('place', 'place')
-            .filter('notUsed')
+            .simpleFilter('out', 'start', '>')
+            .simpleFilter('out', 'end', '<')
+            .simpleFilter('place', 'place')
+            .simpleFilter('notUsed')
             .build();
 
         expect(input).to.be.deep.equal({

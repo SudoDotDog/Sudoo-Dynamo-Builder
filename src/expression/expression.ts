@@ -5,6 +5,7 @@
  */
 
 import { DynamoRecord, DynamoSearchCombination, DynamoSearchRecord } from "../declare";
+import { ensureSearchRecord } from "./condition";
 
 export const buildDynamoKey = (records: DynamoRecord[]): Record<string, string> => {
 
@@ -32,7 +33,7 @@ export const expressionHasCondition = (combinations: DynamoSearchCombination[]):
     for (const combination of combinations) {
 
         for (const record of combination.records) {
-            if (typeof record.value !== 'undefined') {
+            if (ensureSearchRecord(record)) {
                 return true;
             }
         }

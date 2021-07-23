@@ -10,26 +10,64 @@ export type DynamoRecord = {
     readonly value: any;
 };
 
-export type DynamoSearchOperator =
+export type DynamoSearchSimpleOperator =
     "="
     | "<>"
     | ">="
     | "<="
     | ">"
     | "<"
-    | "attribute-type"
-    | "attribute-exist"
-    | "attribute-not-exist"
     | "contains"
     | "begin-with";
+
+export type DynamoSearchBetweenOperator =
+    "between";
+
+export type DynamoSearchExistenceOperator =
+    "attribute-exist"
+    | "attribute-not-exist";
+
+export type DynamoSearchAttributeTypeOperator =
+    "attribute-type";
+
+export type DynamoSearchAttributeType =
+    "String"
+    | "String-Set"
+    | "Number"
+    | "Number-Set"
+    | "Binary"
+    | "Binary-Set"
+    | "Boolean"
+    | "Null"
+    | "List"
+    | "Map";
+
+export type DynamoSearchOperator =
+    DynamoSearchSimpleOperator
+    | DynamoSearchBetweenOperator
+    | DynamoSearchExistenceOperator
+    | DynamoSearchAttributeTypeOperator;
 
 export type DynamoSearchRecord = {
 
     readonly key: string;
-    readonly value: any;
+} & ({
 
-    readonly operator: DynamoSearchOperator;
-};
+    readonly value: any;
+    readonly operator: DynamoSearchSimpleOperator;
+} | {
+
+    readonly greaterThan: any;
+    readonly lessThan: any;
+    readonly operator: DynamoSearchBetweenOperator;
+} | {
+
+    readonly operator: DynamoSearchExistenceOperator;
+} | {
+
+    readonly type: DynamoSearchAttributeType;
+    readonly operator: DynamoSearchAttributeTypeOperator;
+});
 
 export type DynamoUpdateRecord = {
 
