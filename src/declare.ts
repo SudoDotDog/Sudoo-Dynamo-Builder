@@ -10,7 +10,18 @@ export type DynamoRecord = {
     readonly value: any;
 };
 
-export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<" | "contains";
+export type DynamoSearchOperator =
+    "="
+    | "<>"
+    | ">="
+    | "<="
+    | ">"
+    | "<"
+    | "attribute-type"
+    | "attribute-exist"
+    | "attribute-not-exist"
+    | "contains"
+    | "begin-with";
 
 export type DynamoSearchRecord = {
 
