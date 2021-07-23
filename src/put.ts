@@ -35,7 +35,7 @@ export class DynamoPutBuilder extends DynamoBaseBuilder {
         return this.addItemEnsure(key, value);
     }
 
-    public addItemEnsure(key: string, value: string): this {
+    public addItemEnsure(key: string, value: any): this {
 
         this._items.push({
             key,

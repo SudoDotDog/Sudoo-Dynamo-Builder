@@ -29,7 +29,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public where(key: string, value: string): this {
+    public where(key: string, value: any): this {
 
         if (typeof value === 'undefined') {
             return this;
@@ -51,7 +51,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this.conditionEnsure(key, value, operator);
     }
 
-    public conditionEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
+    public conditionEnsure(key: string, value: any, operator: DynamoSearchOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,

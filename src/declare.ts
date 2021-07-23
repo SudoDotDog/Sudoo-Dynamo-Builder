@@ -7,7 +7,7 @@
 export type DynamoRecord = {
 
     readonly key: string;
-    readonly value: string;
+    readonly value: any;
 };
 
 export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<";
@@ -15,7 +15,7 @@ export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<";
 export type DynamoSearchRecord = {
 
     readonly key: string;
-    readonly value: string;
+    readonly value: any;
 
     readonly operator: DynamoSearchOperator;
 };

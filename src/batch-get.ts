@@ -28,7 +28,7 @@ export class DynamoBatchGetBuilder extends DynamoBaseBuilder {
         this._itemObjects = [];
     }
 
-    public singleKeyItem(key: string, value: string): this {
+    public singleKeyItem(key: string, value: any): this {
 
         return this.multipleKeysItem([{
             key,

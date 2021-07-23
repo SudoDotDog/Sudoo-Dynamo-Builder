@@ -37,7 +37,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return this.filterEnsure(key, value, operator);
     }
 
-    public filterEnsure(key: string, value: string, operator: DynamoSearchOperator = '='): this {
+    public filterEnsure(key: string, value: any, operator: DynamoSearchOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,

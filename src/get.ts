@@ -27,7 +27,7 @@ export class DynamoGetBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public where(key: string, value: string): this {
+    public where(key: string, value: any): this {
 
         if (typeof value === 'undefined') {
             return this;

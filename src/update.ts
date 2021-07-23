@@ -29,7 +29,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public where(key: string, value: string): this {
+    public where(key: string, value: any): this {
 
         if (typeof value === 'undefined') {
             return this;
@@ -51,7 +51,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         return this.updateEnsure(key, value);
     }
 
-    public updateEnsure(key: string, value: string): this {
+    public updateEnsure(key: string, value: any): this {
 
         this._update.push({
             key,
@@ -59,6 +59,9 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         });
         return this;
     }
+
+    // public append(key: string, value?: any): this {
+
 
     public build(): DynamoDB.DocumentClient.UpdateItemInput {
 
