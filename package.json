@@ -1,7 +1,7 @@
 {
   "name": "@sudoo/dynamo-builder",
-  "version": "1.5.0",
-  "description": "DynamoDB query builder for Node ",
+  "version": "2.0.0",
+  "description": "DynamoDB query builder for Node",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SudoDotDog/Sudoo-Dynamo-Builder.git"
