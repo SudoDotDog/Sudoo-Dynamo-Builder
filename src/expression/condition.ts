@@ -4,16 +4,58 @@
  * @description Condition
  */
 
-import { DynamoSearchCombination, DynamoSearchOperator, DynamoSearchRecord } from "../declare";
+import { DynamoSearchCombination, DynamoSearchRecord, DynamoSearchSimpleOperator } from "../declare";
 import { ExpressionCorrectKeyHandler } from "./correct-key";
 
-const buildExpressionOperations = (keyKey: string, valueKey: string, operator: DynamoSearchOperator) => {
+const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, record: DynamoSearchRecord): string => {
 
-    if (operator === 'contains') {
-        return `contains(${keyKey}, ${valueKey})`;
+    switch (record.operator) {
+        case '=':
+        case "<>":
+        case ">=":
+        case "<=":
+        case ">":
+        case "<":
+        case "contains":
+        case "begin-with": {
+
+            const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
+            const valueKey: string = keyHandler.getCorrectValueKey(record.key);
+            const operator: DynamoSearchSimpleOperator = record.operator;
+
+            if (operator === 'contains') {
+                return `contains(${keyKey}, ${valueKey})`;
+            }
+            return `${keyKey} ${operator} ${valueKey}`;
+        }
+        case "between": {
+
+            const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
+            const greaterKey: string = keyHandler.getCorrectValueKey(record.key);
+            const lessKey: string = keyHandler.getCorrectValueKey(record.key);
+
+            return `${keyKey} BETWEEN ${greaterKey} AND ${lessKey}`;
+        }
+        case "attribute-exist": {
+
+            const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
+
+            return `attribute_exists(${keyKey})`;
+        }
+        case "attribute-not-exist": {
+
+            const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
+
+            return `attribute_not_exists(${keyKey})`;
+        }
+        case "attribute-type": {
+
+            const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
+            const typeKey: string = keyHandler.getCorrectKeyKey(record.key);
+
+            return `attribute_type(${keyKey}, ${typeKey})`;
+        }
     }
-
-    return `${keyKey} ${operator} ${valueKey}`;
 };
 
 export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
@@ -37,11 +79,7 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
                     if (expressionStack.length > 0) {
                         expressionStack.push(' AND ');
                     }
-
-                    const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
-                    const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
-
-                    const expressionOperation: string = buildExpressionOperations(keyKey, valueKey, record.operator);
+                    const expressionOperation: string = buildExpressionOperations(correctKeyHandler, record);
                     expressionStack.push(expressionOperation);
                 }
             }
@@ -59,10 +97,7 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
                     andJoined = true;
                 }
 
-                const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
-                const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
-
-                const expressionOperation: string = buildExpressionOperations(keyKey, valueKey, record.operator);
+                const expressionOperation: string = buildExpressionOperations(correctKeyHandler, record);
                 recordsStack.push(expressionOperation);
             }
         }
@@ -116,6 +151,7 @@ export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCo
                         const correctLessKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
                         attributeValues[correctGreaterKeyValue] = record.greaterThan;
                         attributeValues[correctLessKeyValue] = record.lessThan;
+
                         continue record;
                     }
                     case "attribute-exist":

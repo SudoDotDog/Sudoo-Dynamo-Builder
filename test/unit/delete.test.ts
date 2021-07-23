@@ -34,6 +34,38 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         } as DynamoDB.DocumentClient.DeleteItemInput);
     });
 
+    it('should be able to create with between condition', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
+            .where('key', 'value')
+            .simpleCondition('key1', 'simple')
+            .betweenCondition('key2', 'greater', 'less')
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key: 'value',
+            },
+            ConditionExpression: '#key1 = :key1 AND #key2 BETWEEN :__key2_0 AND :__key2_1',
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':__key2_0': 'greater',
+                ':__key2_1': 'less',
+                ':key1': 'simple',
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
+    });
+
     it('should be able to create one delete input', (): void => {
 
         const tableName: string = chance.string();

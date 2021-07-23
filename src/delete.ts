@@ -62,6 +62,28 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
+    public betweenCondition(key: string, greaterThan?: any, lessThan?: any): this {
+
+        if (typeof greaterThan === 'undefined'
+            || typeof lessThan === 'undefined') {
+            return this;
+        }
+
+        return this.betweenConditionEnsure(key, greaterThan, lessThan);
+    }
+
+    public betweenConditionEnsure(key: string, greaterThan: any, lessThan: any): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+            key,
+            greaterThan,
+            lessThan,
+            operator: 'between',
+        });
+        this._condition.push(combination);
+        return this;
+    }
+
     public conditionWith(combination: DynamoSearchCombination): this {
 
         this._condition.push(combination);

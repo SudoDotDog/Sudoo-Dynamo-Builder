@@ -15,12 +15,24 @@ export const preParseRecordsKeyProperty = (records: Array<DynamoSearchRecord | D
 
     const result: Record<string, PreParseKeyProperty> = {};
 
-    for (const record of records) {
+    record: for (const record of records) {
 
         const key = record.key;
         if (result[key]) {
             result[key].duplicate = true;
         } else {
+
+            if (typeof (record as any).operator === 'string') {
+
+                const assertRecord: DynamoSearchRecord = record as DynamoSearchRecord;
+                if (assertRecord.operator === 'between') {
+
+                    result[key] = {
+                        duplicate: true,
+                    };
+                    continue record;
+                }
+            }
             result[key] = {
                 duplicate: false
             };
