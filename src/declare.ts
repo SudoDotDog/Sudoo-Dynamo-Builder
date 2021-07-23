@@ -51,6 +51,7 @@ export type DynamoSearchOperator =
 export type DynamoSearchRecord = {
 
     readonly key: string;
+    readonly reverse: boolean;
 } & ({
 
     readonly value: any;

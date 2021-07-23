@@ -42,80 +42,120 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public simpleConditionIfExist(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleConditionIfExist(
+        key: string,
+        value?: any,
+        operator: DynamoSearchSimpleOperator = '=',
+        reverse: boolean = false,
+    ): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.simpleCondition(key, value, operator);
+        return this.simpleCondition(key, value, operator, reverse);
     }
 
-    public simpleCondition(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleCondition(
+        key: string,
+        value: any,
+        operator: DynamoSearchSimpleOperator = '=',
+        reverse: boolean = false,
+    ): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             value,
             operator,
+            reverse,
         });
         this._condition.push(combination);
         return this;
     }
 
-    public betweenConditionIfBothExist(key: string, greaterThan?: any, lessThan?: any): this {
+    public betweenConditionIfBothExist(
+        key: string,
+        greaterThan?: any,
+        lessThan?: any,
+        reverse: boolean = false,
+    ): this {
 
         if (typeof greaterThan === 'undefined'
             || typeof lessThan === 'undefined') {
             return this;
         }
-        return this.betweenCondition(key, greaterThan, lessThan);
+        return this.betweenCondition(key, greaterThan, lessThan, reverse);
     }
 
-    public betweenCondition(key: string, greaterThan: any, lessThan: any): this {
+    public betweenCondition(
+        key: string,
+        greaterThan: any,
+        lessThan: any,
+        reverse: boolean = false,
+    ): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             greaterThan,
             lessThan,
             operator: 'between',
+            reverse,
         });
         this._condition.push(combination);
         return this;
     }
 
-    public attributeExistCondition(key: string, operator: DynamoSearchExistenceOperator = 'attribute-exists'): this {
+    public attributeExistCondition(
+        key: string,
+        operator: DynamoSearchExistenceOperator = 'attribute-exists',
+        reverse: boolean = false,
+    ): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             operator,
+            reverse,
         });
         this._condition.push(combination);
         return this;
     }
 
-    public attributeTypeConditionIfExist(key: string, type?: DynamoSearchAttributeType): this {
+    public attributeTypeConditionIfExist(
+        key: string,
+        type?: DynamoSearchAttributeType,
+        reverse: boolean = false,
+    ): this {
 
         if (typeof type === 'undefined') {
             return this;
         }
-        return this.attributeTypeConditionIfValid(key, type);
+        return this.attributeTypeConditionIfValid(key, type, reverse);
     }
 
-    public attributeTypeConditionIfValid(key: string, type: DynamoSearchAttributeType): this {
+    public attributeTypeConditionIfValid(
+        key: string,
+        type: DynamoSearchAttributeType,
+        reverse: boolean = false,
+    ): this {
 
         const verifyResult: boolean = verifyDynamoAttributeType(type);
         if (!verifyResult) {
             return this;
         }
-        return this.attributeTypeCondition(key, type);
+        return this.attributeTypeCondition(key, type, reverse);
     }
 
-    public attributeTypeCondition(key: string, type: DynamoSearchAttributeType): this {
+    public attributeTypeCondition(
+        key: string,
+        type: DynamoSearchAttributeType,
+        reverse: boolean = false,
+    ): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
             type,
             operator: 'attribute-type',
+            reverse,
         });
         this._condition.push(combination);
         return this;

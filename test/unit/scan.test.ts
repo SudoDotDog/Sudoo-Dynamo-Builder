@@ -189,10 +189,12 @@ describe('Given {DynamoScanBuilder} class', (): void => {
                     key: 'key3',
                     value: 'value3',
                     operator: '=',
+                    reverse: false,
                 }, {
                     key: 'key4',
                     value: 'value4',
                     operator: '<',
+                    reverse: false,
                 }],
                 relation: "OR",
             })
