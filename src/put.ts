@@ -26,16 +26,16 @@ export class DynamoPutBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public addItem(key: string, value?: any): this {
+    public addItemIfExist(key: string, value?: any): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.addItemEnsure(key, value);
+        return this.addItem(key, value);
     }
 
-    public addItemEnsure(key: string, value: any): this {
+    public addItem(key: string, value: any): this {
 
         this._items.push({
             key,

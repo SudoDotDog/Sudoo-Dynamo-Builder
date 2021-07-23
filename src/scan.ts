@@ -28,16 +28,16 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public simpleFilter(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleFilterIfExist(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.simpleFilterEnsure(key, value, operator);
+        return this.simpleFilter(key, value, operator);
     }
 
-    public simpleFilterEnsure(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleFilter(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
 
@@ -49,17 +49,17 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public between(key: string, greaterThan?: any, lessThan?: any): this {
+    public betweenIfExist(key: string, greaterThan?: any, lessThan?: any): this {
 
         if (typeof greaterThan === 'undefined'
             || typeof lessThan === 'undefined') {
             return this;
         }
 
-        return this.betweenEnsure(key, greaterThan, lessThan);
+        return this.between(key, greaterThan, lessThan);
     }
 
-    public betweenEnsure(key: string, greaterThan: any, lessThan: any): this {
+    public between(key: string, greaterThan: any, lessThan: any): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
 

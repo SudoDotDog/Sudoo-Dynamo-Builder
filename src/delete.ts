@@ -42,16 +42,16 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public simpleCondition(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleConditionIfExist(key: string, value?: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.simpleConditionEnsure(key, value, operator);
+        return this.simpleCondition(key, value, operator);
     }
 
-    public simpleConditionEnsure(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
+    public simpleCondition(key: string, value: any, operator: DynamoSearchSimpleOperator = '='): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,
@@ -62,17 +62,17 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public betweenCondition(key: string, greaterThan?: any, lessThan?: any): this {
+    public betweenConditionIfBothExist(key: string, greaterThan?: any, lessThan?: any): this {
 
         if (typeof greaterThan === 'undefined'
             || typeof lessThan === 'undefined') {
             return this;
         }
 
-        return this.betweenConditionEnsure(key, greaterThan, lessThan);
+        return this.betweenCondition(key, greaterThan, lessThan);
     }
 
-    public betweenConditionEnsure(key: string, greaterThan: any, lessThan: any): this {
+    public betweenCondition(key: string, greaterThan: any, lessThan: any): this {
 
         const combination: DynamoSearchCombination = buildSingletonCombination({
             key,

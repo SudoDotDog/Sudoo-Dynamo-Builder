@@ -43,16 +43,16 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public update(key: string, value?: any): this {
+    public updateIfExist(key: string, value?: any): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.updateEnsure(key, value);
+        return this.update(key, value);
     }
 
-    public updateEnsure(key: string, value: any): this {
+    public update(key: string, value: any): this {
 
         this._update.push({
             key,
@@ -62,16 +62,16 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public appendToList(key: string, value?: any[]): this {
+    public appendToListIfExist(key: string, value?: any[]): this {
 
         if (typeof value === 'undefined') {
             return this;
         }
 
-        return this.appendToListEnsure(key, value);
+        return this.appendToList(key, value);
     }
 
-    public appendToListEnsure(key: string, value: any[]): this {
+    public appendToList(key: string, value: any[]): this {
 
         this._update.push({
             key,

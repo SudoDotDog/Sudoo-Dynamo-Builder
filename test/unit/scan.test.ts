@@ -98,9 +98,9 @@ describe('Given {DynamoScanBuilder} class', (): void => {
 
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value1')
-            .simpleFilter('key2', undefined)
-            .simpleFilter('key3', 'value3')
+            .simpleFilterIfExist('key1', 'value1')
+            .simpleFilterIfExist('key2', undefined)
+            .simpleFilterIfExist('key3', 'value3')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -173,7 +173,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             .simpleFilter('out', 'start', '>')
             .simpleFilter('out', 'end', '<')
             .simpleFilter('place', 'place')
-            .simpleFilter('notUsed')
+            .simpleFilterIfExist('notUsed')
             .build();
 
         expect(input).to.be.deep.equal({
