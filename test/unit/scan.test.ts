@@ -39,6 +39,34 @@ describe('Given {DynamoScanBuilder} class', (): void => {
         } as DynamoDB.DocumentClient.ScanInput);
     });
 
+    it('should be able to create simple scan input - with contains', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .filter('key1', 'value1')
+            .filter('key2', 'value2', 'contains')
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value1',
+                ':key2': 'value2',
+            },
+            FilterExpression: '#key1 = :key1 AND contains(#key2, :key2)',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
+
     it('should be able to create simple scan input with operator', (): void => {
 
         const tableName: string = chance.string();
