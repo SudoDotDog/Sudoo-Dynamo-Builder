@@ -105,6 +105,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
     private _hasContent(): boolean {
 
-        return expressionHasContent(this._update);
+        return expressionHasContent(this._update)
+            || expressionHasContent(this._append);
     }
 }
