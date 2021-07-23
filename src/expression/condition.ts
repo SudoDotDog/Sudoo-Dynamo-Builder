@@ -95,11 +95,39 @@ export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCo
     const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
 
     for (const combination of combinations) {
-        for (const record of combination.records) {
+        record: for (const record of combination.records) {
             if (ensureSearchRecord(record)) {
 
-                const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
-                // attributeValues[correctKeyValue] = record.value;
+                switch (record.operator) {
+                    case '=':
+                    case "<>":
+                    case ">=":
+                    case "<=":
+                    case ">":
+                    case "<":
+                    case "contains":
+                    case "begin-with": {
+                        const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
+                        attributeValues[correctKeyValue] = record.value;
+                        continue record;
+                    }
+                    case "between": {
+                        const correctGreaterKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
+                        const correctLessKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
+                        attributeValues[correctGreaterKeyValue] = record.greaterThan;
+                        attributeValues[correctLessKeyValue] = record.lessThan;
+                        continue record;
+                    }
+                    case "attribute-exist":
+                    case "attribute-not-exist": {
+                        continue record;
+                    }
+                    case "attribute-type": {
+                        const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
+                        attributeValues[correctKeyValue] = record.type;
+                        continue record;
+                    }
+                }
             }
         }
     }

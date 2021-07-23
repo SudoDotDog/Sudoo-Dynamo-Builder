@@ -41,7 +41,7 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key', 'value')
-            .condition('key', 'value')
+            .simpleCondition('key', 'value')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -69,9 +69,9 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key', 'value')
-            .condition('key1', 'value')
-            .condition('key2', 'value')
-            .condition('key3', 'value')
+            .simpleCondition('key1', 'value')
+            .simpleCondition('key2', 'value')
+            .simpleCondition('key3', 'value')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -103,9 +103,9 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key', 'value')
-            .condition('key1', 'value')
-            .condition('key2', 'value')
-            .condition('key2', 'value')
+            .simpleCondition('key1', 'value')
+            .simpleCondition('key2', 'value')
+            .simpleCondition('key2', 'value')
             .build();
 
         expect(input).to.be.deep.equal({
