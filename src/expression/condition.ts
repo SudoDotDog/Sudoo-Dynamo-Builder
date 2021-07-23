@@ -8,7 +8,7 @@ import { DynamoSearchCombination, DynamoSearchRecord, DynamoSearchSimpleOperator
 import { ExpressionCorrectKeyHandler } from "./correct-key";
 import { parseDynamoAttributeType } from "./expression";
 
-const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, record: DynamoSearchRecord): string => {
+const buildExpressionOperationsWithOutReverse = (keyHandler: ExpressionCorrectKeyHandler, record: DynamoSearchRecord): string => {
 
     switch (record.operator) {
         case '=':
@@ -57,6 +57,15 @@ const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, reco
             return `attribute_type(${keyKey}, ${typeKey})`;
         }
     }
+};
+
+const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, record: DynamoSearchRecord): string => {
+
+    const regular: string = buildExpressionOperationsWithOutReverse(keyHandler, record);
+    if (record.reverse) {
+        return `(NOT ${regular})`;
+    }
+    return regular;
 };
 
 export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {

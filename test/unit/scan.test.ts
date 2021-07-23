@@ -221,7 +221,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
         } as DynamoDB.DocumentClient.ScanInput);
     });
 
-    it('should be able to create scan with empty input', (): void => {
+    it('should be able to create scan with not used input', (): void => {
 
         const tableName: string = chance.string();
 
@@ -246,6 +246,34 @@ describe('Given {DynamoScanBuilder} class', (): void => {
                 ':place': 'place',
             },
             FilterExpression: '#out > :__out_0 AND #out < :__out_1 AND #place = :place',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
+
+    it('should be able to create reversed input', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .simpleFilter('key1', 'value1')
+            .simpleFilter('key2', 'value2', '=', true)
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value1',
+                ':key2': 'value2',
+            },
+            FilterExpression: '#key1 = :key1 AND (NOT #key2 = :key2)',
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",

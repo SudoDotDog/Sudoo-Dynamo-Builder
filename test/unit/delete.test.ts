@@ -221,4 +221,36 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.DeleteItemInput);
     });
+
+    it('should be able to create attribute type delete input with reverse', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
+            .where('key1', 'value')
+            .simpleConditionIfExist('key2', 'value2')
+            .attributeTypeConditionIfExist('key3', 'Binary-Set', true)
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key1: 'value',
+            },
+            ConditionExpression: '#key2 = :key2 AND (NOT attribute_type(#key3, #key3))',
+            ExpressionAttributeNames: {
+                '#key2': 'key2',
+                '#key3': 'key3',
+            },
+            ExpressionAttributeValues: {
+                ':key2': 'value2',
+                ':key3': 'BS',
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
+    });
+
 });
