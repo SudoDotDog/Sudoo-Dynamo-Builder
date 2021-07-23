@@ -95,4 +95,35 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
+
+    it('should be able to create list append update', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoUpdateBuilder = DynamoUpdateBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.UpdateItemInput = builder
+            .where('key', 'value')
+            .update('key1', 'value')
+            .appendToList('key2', ['value'])
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key: 'value',
+            },
+            UpdateExpression: 'set #key1 = :key1, #key2 = list_append(#key2, :key2)',
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value',
+                ':key2': ['value'],
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.UpdateItemInput);
+    });
 });
