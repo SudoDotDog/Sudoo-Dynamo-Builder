@@ -8,7 +8,7 @@ import { DynamoDB } from "aws-sdk";
 import { buildDynamoSetAttributeNames, buildDynamoSetAttributeValues, buildDynamoSetExpression } from ".";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
-import { buildDynamoKey } from "./expression/expression";
+import { buildDynamoKey, expressionHasContent } from "./expression/expression";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
@@ -20,7 +20,9 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
     private readonly _tableName: string;
 
     private readonly _where: DynamoRecord[] = [];
+
     private readonly _update: DynamoRecord[] = [];
+    private readonly _append: DynamoRecord[] = [];
 
     private constructor(tableName: string) {
 
@@ -60,8 +62,23 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    // public append(key: string, value?: any): this {
+    public appendToList(key: string, value?: any): this {
 
+        if (typeof value === 'undefined') {
+            return this;
+        }
+
+        return this.appendToListEnsure(key, value);
+    }
+
+    public appendToListEnsure(key: string, value: any): this {
+
+        this._append.push({
+            key,
+            value,
+        });
+        return this;
+    }
 
     public build(): DynamoDB.DocumentClient.UpdateItemInput {
 
@@ -88,11 +105,6 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
     private _hasContent(): boolean {
 
-        for (const record of this._update) {
-            if (typeof record.value !== 'undefined') {
-                return true;
-            }
-        }
-        return false;
+        return expressionHasContent(this._update);
     }
 }

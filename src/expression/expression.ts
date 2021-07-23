@@ -39,3 +39,13 @@ export const expressionHasCondition = (combinations: DynamoSearchCombination[]):
     }
     return false;
 };
+
+export const expressionHasContent = (records: DynamoRecord[]): boolean => {
+
+    for (const record of records) {
+        if (typeof record.value !== 'undefined') {
+            return true;
+        }
+    }
+    return false;
+};
