@@ -33,4 +33,24 @@ describe('Given {DynamoPutBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.PutItemInput);
     });
+
+    it('should be able to create put input with list', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoPutBuilder = DynamoPutBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.PutItemInput = builder
+            .addItem('key', ['value'])
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Item: {
+                key: ['value'],
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.PutItemInput);
+    });
 });
