@@ -24,8 +24,8 @@ export type DynamoSearchBetweenOperator =
     "between";
 
 export type DynamoSearchExistenceOperator =
-    "attribute-exist"
-    | "attribute-not-exist";
+    "attribute-exists"
+    | "attribute-not-exists";
 
 export type DynamoSearchAttributeTypeOperator =
     "attribute-type";

@@ -67,6 +67,33 @@ describe('Given {DynamoScanBuilder} class', (): void => {
         } as DynamoDB.DocumentClient.ScanInput);
     });
 
+    it('should be able to create attribute exist scan input', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .simpleFilter('key1', 'value')
+            .attributeExist('key2')
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':key1': 'value',
+            },
+            FilterExpression: '#key1 = :key1 AND attribute_exists(#key2)',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
+
     it('should be able to create simple scan input - with contains', (): void => {
 
         const tableName: string = chance.string();

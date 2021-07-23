@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
+import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExistenceOperator, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildSingletonCombination, verifyDynamoAttributeType } from "./expression/expression";
 
@@ -43,6 +43,17 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
             key,
             value,
+            operator,
+        });
+        this._filter.push(combination);
+        return this;
+    }
+
+    public attributeExist(key: string, operator: DynamoSearchExistenceOperator = 'attribute-exists'): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+
+            key,
             operator,
         });
         this._filter.push(combination);

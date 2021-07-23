@@ -6,7 +6,7 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord, DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
+import { DynamoRecord, DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExistenceOperator, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildDynamoKey, buildSingletonCombination, expressionHasCondition, verifyDynamoAttributeType } from "./expression/expression";
 
@@ -78,6 +78,16 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
             greaterThan,
             lessThan,
             operator: 'between',
+        });
+        this._condition.push(combination);
+        return this;
+    }
+
+    public attributeExistCondition(key: string, operator: DynamoSearchExistenceOperator = 'attribute-exists'): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+            key,
+            operator,
         });
         this._condition.push(combination);
         return this;

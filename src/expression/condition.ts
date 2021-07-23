@@ -37,13 +37,13 @@ const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, reco
 
             return `${keyKey} BETWEEN ${greaterKey} AND ${lessKey}`;
         }
-        case "attribute-exist": {
+        case "attribute-exists": {
 
             const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
 
             return `attribute_exists(${keyKey})`;
         }
-        case "attribute-not-exist": {
+        case "attribute-not-exists": {
 
             const keyKey: string = keyHandler.getCorrectKeyKey(record.key);
 
@@ -155,8 +155,8 @@ export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCo
 
                         continue record;
                     }
-                    case "attribute-exist":
-                    case "attribute-not-exist": {
+                    case "attribute-exists":
+                    case "attribute-not-exists": {
                         continue record;
                     }
                     case "attribute-type": {
@@ -186,8 +186,8 @@ export const ensureSearchRecord = (record: DynamoSearchRecord): boolean => {
         case "between":
             return record.greaterThan !== 'undefined'
                 && record.lessThan !== 'undefined';
-        case "attribute-exist":
-        case "attribute-not-exist":
+        case "attribute-exists":
+        case "attribute-not-exists":
             return true;
         case "attribute-type":
             return record.type === 'String'

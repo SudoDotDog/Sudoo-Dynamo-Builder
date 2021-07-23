@@ -65,6 +65,36 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         } as DynamoDB.DocumentClient.DeleteItemInput);
     });
 
+    it('should be able to create attribute exist delete input', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoDeleteBuilder = DynamoDeleteBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.DeleteItemInput = builder
+            .where('key1', 'value')
+            .simpleConditionIfExist('key2', 'value2')
+            .attributeExistCondition('key3', 'attribute-not-exists')
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key1: 'value',
+            },
+            ConditionExpression: '#key2 = :key2 AND attribute_not_exists(#key3)',
+            ExpressionAttributeNames: {
+                '#key2': 'key2',
+                '#key3': 'key3',
+            },
+            ExpressionAttributeValues: {
+                ':key2': 'value2',
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.DeleteItemInput);
+    });
+
     it('should be able to create with between condition', (): void => {
 
         const tableName: string = chance.string();
