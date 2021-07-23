@@ -6,9 +6,9 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
+import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
-import { buildSingletonCombination } from "./expression/expression";
+import { buildSingletonCombination, verifyDynamoAttributeType } from "./expression/expression";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -67,6 +67,34 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
             greaterThan,
             lessThan,
             operator: 'between',
+        });
+        this._filter.push(combination);
+        return this;
+    }
+
+    public attributeTypeIfExist(key: string, type?: DynamoSearchAttributeType): this {
+
+        if (typeof type === 'undefined') {
+            return this;
+        }
+        return this.attributeTypeIfValid(key, type);
+    }
+
+    public attributeTypeIfValid(key: string, type: DynamoSearchAttributeType): this {
+
+        const verifyResult: boolean = verifyDynamoAttributeType(type);
+        if (!verifyResult) {
+            return this;
+        }
+        return this.attributeType(key, type);
+    }
+
+    public attributeType(key: string, type: DynamoSearchAttributeType): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+            key,
+            type,
+            operator: 'attribute-type',
         });
         this._filter.push(combination);
         return this;

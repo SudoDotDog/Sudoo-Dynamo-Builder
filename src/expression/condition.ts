@@ -6,6 +6,7 @@
 
 import { DynamoSearchCombination, DynamoSearchRecord, DynamoSearchSimpleOperator } from "../declare";
 import { ExpressionCorrectKeyHandler } from "./correct-key";
+import { parseDynamoAttributeType } from "./expression";
 
 const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, record: DynamoSearchRecord): string => {
 
@@ -160,7 +161,7 @@ export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCo
                     }
                     case "attribute-type": {
                         const correctKeyValue: string = correctKeyHandler.getCorrectValueKey(record.key);
-                        attributeValues[correctKeyValue] = record.type;
+                        attributeValues[correctKeyValue] = parseDynamoAttributeType(record.type);
                         continue record;
                     }
                 }

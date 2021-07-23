@@ -4,7 +4,7 @@
  * @description Expression
  */
 
-import { DynamoRecord, DynamoSearchCombination, DynamoSearchRecord } from "../declare";
+import { DynamoRecord, DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchRecord } from "../declare";
 import { ensureSearchRecord } from "./condition";
 
 export const buildDynamoKey = (records: DynamoRecord[]): Record<string, string> => {
@@ -49,4 +49,47 @@ export const expressionHasContent = (records: DynamoRecord[]): boolean => {
         }
     }
     return false;
+};
+
+export const verifyDynamoAttributeType = (type: DynamoSearchAttributeType): boolean => {
+
+    if (type === "String"
+        || type === "String-Set"
+        || type === "Number"
+        || type === "Number-Set"
+        || type === "Binary"
+        || type === "Binary-Set"
+        || type === "Boolean"
+        || type === "Null"
+        || type === "List"
+        || type === "Map") {
+        return true;
+    }
+    return false;
+};
+
+export const parseDynamoAttributeType = (type: DynamoSearchAttributeType): string => {
+
+    switch (type) {
+        case "String":
+            return "S";
+        case "String-Set":
+            return "SS";
+        case "Number":
+            return "N";
+        case "Number-Set":
+            return "NS";
+        case "Binary":
+            return "B";
+        case "Binary-Set":
+            return "BS";
+        case "Boolean":
+            return "BOOL";
+        case "Null":
+            return "NULL";
+        case "List":
+            return "L";
+        case "Map":
+            return "M";
+    }
 };

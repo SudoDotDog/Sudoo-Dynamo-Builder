@@ -6,9 +6,9 @@
 
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
+import { DynamoRecord, DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
-import { buildDynamoKey, buildSingletonCombination, expressionHasCondition } from "./expression/expression";
+import { buildDynamoKey, buildSingletonCombination, expressionHasCondition, verifyDynamoAttributeType } from "./expression/expression";
 
 export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
@@ -68,7 +68,6 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
             || typeof lessThan === 'undefined') {
             return this;
         }
-
         return this.betweenCondition(key, greaterThan, lessThan);
     }
 
@@ -79,6 +78,34 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
             greaterThan,
             lessThan,
             operator: 'between',
+        });
+        this._condition.push(combination);
+        return this;
+    }
+
+    public attributeTypeConditionIfExist(key: string, type?: DynamoSearchAttributeType): this {
+
+        if (typeof type === 'undefined') {
+            return this;
+        }
+        return this.attributeTypeConditionIfValid(key, type);
+    }
+
+    public attributeTypeConditionIfValid(key: string, type: DynamoSearchAttributeType): this {
+
+        const verifyResult: boolean = verifyDynamoAttributeType(type);
+        if (!verifyResult) {
+            return this;
+        }
+        return this.attributeTypeCondition(key, type);
+    }
+
+    public attributeTypeCondition(key: string, type: DynamoSearchAttributeType): this {
+
+        const combination: DynamoSearchCombination = buildSingletonCombination({
+            key,
+            type,
+            operator: 'attribute-type',
         });
         this._condition.push(combination);
         return this;
