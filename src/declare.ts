@@ -10,7 +10,7 @@ export type DynamoRecord = {
     readonly value: any;
 };
 
-export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<";
+export type DynamoSearchOperator = "=" | "<>" | ">=" | "<=" | ">" | "<" | "contains";
 
 export type DynamoSearchRecord = {
 

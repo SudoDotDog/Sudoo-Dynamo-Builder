@@ -4,8 +4,17 @@
  * @description Condition
  */
 
-import { DynamoSearchCombination, DynamoSearchRecord } from "../declare";
+import { DynamoSearchCombination, DynamoSearchOperator, DynamoSearchRecord } from "../declare";
 import { ExpressionCorrectKeyHandler } from "./correct-key";
+
+const buildExpressionOperations = (keyKey: string, valueKey: string, operator: DynamoSearchOperator) => {
+
+    if (operator === 'contains') {
+        return `contains(${keyKey}, ${valueKey})`;
+    }
+
+    return `${keyKey} ${operator} ${valueKey}`;
+};
 
 export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
 
@@ -31,7 +40,9 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
 
                     const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
                     const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
-                    expressionStack.push(`${keyKey} ${record.operator} ${valueKey}`);
+
+                    const expressionOperation: string = buildExpressionOperations(keyKey, valueKey, record.operator);
+                    expressionStack.push(expressionOperation);
                 }
             }
             continue combination;
@@ -50,7 +61,9 @@ export const buildDynamoConditionExpression = (combinations: DynamoSearchCombina
 
                 const keyKey: string = correctKeyHandler.getCorrectKeyKey(record.key);
                 const valueKey: string = correctKeyHandler.getCorrectValueKey(record.key);
-                recordsStack.push(`${keyKey} ${record.operator} ${valueKey}`);
+
+                const expressionOperation: string = buildExpressionOperations(keyKey, valueKey, record.operator);
+                recordsStack.push(expressionOperation);
             }
         }
         expressionStack.push(`(${recordsStack.join(` ${combination.relation} `)})`);
