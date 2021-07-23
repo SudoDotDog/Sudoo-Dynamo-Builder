@@ -47,7 +47,7 @@ export const buildDynamoSetAttributeNames = (records: DynamoRecord[]): Record<st
     return attributeNames;
 };
 
-export const buildDynamoSetAttributeValues = (records: DynamoRecord[]): Record<string, string> => {
+export const buildDynamoSetAttributeValues = (records: DynamoRecord[]): Record<string, any> => {
 
     const attributeValues: Record<string, string> = {};
     const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromRecords(records);

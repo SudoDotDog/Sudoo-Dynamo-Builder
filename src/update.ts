@@ -5,10 +5,10 @@
  */
 
 import { DynamoDB } from "aws-sdk";
-import { buildDynamoSetAttributeNames, buildDynamoSetAttributeValues, buildDynamoSetExpression } from ".";
 import { DynamoBaseBuilder } from "./base";
-import { DynamoRecord } from "./declare";
+import { DynamoRecord, DynamoUpdateRecord } from "./declare";
 import { buildDynamoKey, expressionHasContent } from "./expression/expression";
+import { buildDynamoUpdateAttributeNames, buildDynamoUpdateAttributeValues, buildDynamoUpdateExpression } from "./expression/update";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
@@ -21,8 +21,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
     private readonly _where: DynamoRecord[] = [];
 
-    private readonly _update: DynamoRecord[] = [];
-    private readonly _append: DynamoRecord[] = [];
+    private readonly _update: DynamoUpdateRecord[] = [];
 
     private constructor(tableName: string) {
 
@@ -58,11 +57,12 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         this._update.push({
             key,
             value,
+            type: 'base',
         });
         return this;
     }
 
-    public appendToList(key: string, value?: any): this {
+    public appendToList(key: string, value?: any[]): this {
 
         if (typeof value === 'undefined') {
             return this;
@@ -71,11 +71,12 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
         return this.appendToListEnsure(key, value);
     }
 
-    public appendToListEnsure(key: string, value: any): this {
+    public appendToListEnsure(key: string, value: any[]): this {
 
-        this._append.push({
+        this._update.push({
             key,
             value,
+            type: 'list-append',
         });
         return this;
     }
@@ -96,16 +97,15 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
-            UpdateExpression: buildDynamoSetExpression(this._update),
-            ExpressionAttributeNames: buildDynamoSetAttributeNames(this._update),
-            ExpressionAttributeValues: buildDynamoSetAttributeValues(this._update),
+            UpdateExpression: buildDynamoUpdateExpression(this._update),
+            ExpressionAttributeNames: buildDynamoUpdateAttributeNames(this._update),
+            ExpressionAttributeValues: buildDynamoUpdateAttributeValues(this._update),
             ...this._buildReturnParameters(),
         };
     }
 
     private _hasContent(): boolean {
 
-        return expressionHasContent(this._update)
-            || expressionHasContent(this._append);
+        return expressionHasContent(this._update);
     }
 }

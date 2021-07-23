@@ -20,6 +20,19 @@ export type DynamoSearchRecord = {
     readonly operator: DynamoSearchOperator;
 };
 
+export type DynamoUpdateRecord = {
+
+    readonly key: string;
+} & ({
+
+    readonly type: 'base';
+    readonly value: any;
+} | {
+
+    readonly type: 'list-append';
+    readonly value: any[];
+});
+
 export type DynamoSearchCombinationRelation = "AND" | "OR";
 
 export type DynamoSearchCombination = {

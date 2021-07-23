@@ -76,7 +76,7 @@ export const buildDynamoConditionAttributeNames = (combinations: DynamoSearchCom
     return attributeNames;
 };
 
-export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCombination[]): Record<string, string> => {
+export const buildDynamoConditionAttributeValues = (combinations: DynamoSearchCombination[]): Record<string, any> => {
 
     const attributeValues: Record<string, string> = {};
     const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
