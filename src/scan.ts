@@ -9,6 +9,7 @@ import { DynamoBaseBuilder } from "./base";
 import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExistenceOperator, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildSingletonCombination, verifyDynamoAttributeType } from "./expression/expression";
+import { buildDynamoKeyExpression } from "./expression/key";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -20,6 +21,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
     private readonly _tableName: string;
 
     private readonly _filter: DynamoSearchCombination[] = [];
+    private readonly _projection: string[] = [];
 
     private constructor(tableName: string) {
 
@@ -157,12 +159,29 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return this;
     }
 
+    public projectKey(key: string): this {
+
+        return this.projectKeys(key);
+    }
+
+    public projectKeys(...keys: string[]): this {
+
+        return this.projectKeyList(keys);
+    }
+
+    public projectKeyList(keys: string[]): this {
+
+        this._projection.push(...keys);
+        return this;
+    }
+
     public build(): DynamoDB.DocumentClient.ScanInput {
 
         return {
 
             TableName: this._tableName,
             FilterExpression: buildDynamoConditionExpression(this._filter),
+            ProjectionExpression: buildDynamoKeyExpression(this._projection),
             ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._filter),
             ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._filter),
             ...this._buildReturnParameters(),
