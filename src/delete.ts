@@ -105,7 +105,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public attributeExistCondition(
+    public attributeExistenceCondition(
         key: string,
         operator: DynamoSearchExistenceOperator = 'attribute-exists',
         reverse: boolean = false,

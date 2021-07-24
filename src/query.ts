@@ -20,6 +20,7 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
+    private readonly _condition: DynamoSearchCombination[] = [];
     private readonly _filter: DynamoSearchCombination[] = [];
     private readonly _projection: string[] = [];
 
@@ -30,7 +31,7 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         this._tableName = tableName;
     }
 
-    public simpleFilterIfExist(
+    public filterSimpleIfExist(
         key: string,
         value?: any,
         operator: DynamoSearchSimpleOperator = '=',
@@ -41,10 +42,10 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
             return this;
         }
 
-        return this.simpleFilter(key, value, operator, reverse);
+        return this.filterSimple(key, value, operator, reverse);
     }
 
-    public simpleFilter(
+    public filterSimple(
         key: string,
         value: any,
         operator: DynamoSearchSimpleOperator = '=',
@@ -62,7 +63,7 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public attributeExist(
+    public filterAttributeExistence(
         key: string,
         operator: DynamoSearchExistenceOperator = 'attribute-exists',
         reverse: boolean = false,
@@ -78,7 +79,7 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public betweenIfExist(
+    public filterBetweenIfExist(
         key: string,
         greaterThan?: any,
         lessThan?: any,
@@ -90,10 +91,10 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
             return this;
         }
 
-        return this.between(key, greaterThan, lessThan, reverse);
+        return this.filterBetween(key, greaterThan, lessThan, reverse);
     }
 
-    public between(
+    public filterBetween(
         key: string,
         greaterThan: any,
         lessThan: any,
@@ -112,7 +113,7 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public attributeTypeIfExist(
+    public filterAttributeTypeIfExist(
         key: string,
         type?: DynamoSearchAttributeType,
         reverse: boolean = false,
@@ -121,10 +122,10 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         if (typeof type === 'undefined') {
             return this;
         }
-        return this.attributeTypeIfValid(key, type, reverse);
+        return this.filterAttributeTypeIfValid(key, type, reverse);
     }
 
-    public attributeTypeIfValid(
+    public filterAttributeTypeIfValid(
         key: string,
         type: DynamoSearchAttributeType,
         reverse: boolean = false,
@@ -134,10 +135,10 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         if (!verifyResult) {
             return this;
         }
-        return this.attributeType(key, type, reverse);
+        return this.filterAttributeType(key, type, reverse);
     }
 
-    public attributeType(
+    public filterAttributeType(
         key: string,
         type: DynamoSearchAttributeType,
         reverse: boolean = false,

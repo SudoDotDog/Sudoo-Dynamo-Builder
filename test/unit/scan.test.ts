@@ -74,7 +74,7 @@ describe('Given {DynamoScanBuilder} class', (): void => {
         const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
         const input: DynamoDB.DocumentClient.ScanInput = builder
             .simpleFilter('key1', 'value')
-            .attributeExist('key2')
+            .attributeExistence('key2')
             .build();
 
         expect(input).to.be.deep.equal({

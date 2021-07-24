@@ -62,7 +62,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         return this;
     }
 
-    public attributeExist(
+    public attributeExistence(
         key: string,
         operator: DynamoSearchExistenceOperator = 'attribute-exists',
         reverse: boolean = false,

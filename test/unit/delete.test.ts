@@ -73,7 +73,7 @@ describe('Given {DynamoDeleteBuilder} class', (): void => {
         const input: DynamoDB.DocumentClient.DeleteItemInput = builder
             .where('key1', 'value')
             .simpleConditionIfExist('key2', 'value2')
-            .attributeExistCondition('key3', 'attribute-not-exists')
+            .attributeExistenceCondition('key3', 'attribute-not-exists')
             .build();
 
         expect(input).to.be.deep.equal({
