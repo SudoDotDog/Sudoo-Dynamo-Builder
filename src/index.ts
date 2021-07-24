@@ -16,6 +16,7 @@ export * from "./expression/expression";
 export * from "./expression/set";
 export * from "./get";
 export * from "./put";
+export * from "./query";
 export * from "./scan";
 export * from "./update";
 export * from "./util";

@@ -7,7 +7,7 @@
 
 import { expect } from "chai";
 import * as Chance from "chance";
-import { DynamoBatchDeleteBuilder, DynamoBatchGetBuilder, DynamoBatchPutBuilder, DynamoBuilder, DynamoDeleteBuilder, DynamoGetBuilder, DynamoScanBuilder, DynamoUpdateBuilder } from "../../src";
+import { DynamoBatchDeleteBuilder, DynamoBatchGetBuilder, DynamoBatchPutBuilder, DynamoBuilder, DynamoDeleteBuilder, DynamoGetBuilder, DynamoPutBuilder, DynamoQueryBuilder, DynamoScanBuilder, DynamoUpdateBuilder } from "../../src";
 
 describe('Given {DynamoBuilder} class', (): void => {
 
@@ -56,6 +56,24 @@ describe('Given {DynamoBuilder} class', (): void => {
         const getBuilder: DynamoGetBuilder = builder.get();
 
         expect(getBuilder).to.be.an.instanceof(DynamoGetBuilder);
+    });
+
+    it('should be able to construct put', (): void => {
+
+        const builder: DynamoBuilder = DynamoBuilder.create(chance.string());
+
+        const putBuilder: DynamoPutBuilder = builder.put();
+
+        expect(putBuilder).to.be.an.instanceof(DynamoPutBuilder);
+    });
+
+    it('should be able to construct query', (): void => {
+
+        const builder: DynamoBuilder = DynamoBuilder.create(chance.string());
+
+        const queryBuilder: DynamoQueryBuilder = builder.query();
+
+        expect(queryBuilder).to.be.an.instanceof(DynamoQueryBuilder);
     });
 
     it('should be able to construct scan', (): void => {
