@@ -9,6 +9,7 @@ import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { buildDynamoKey } from "./expression/expression";
 import { buildDynamoKeyExpression } from "./expression/key";
+import { onlyUseValidObjectProperties } from "./util";
 
 export class DynamoGetBuilder extends DynamoBaseBuilder {
 
@@ -60,12 +61,12 @@ export class DynamoGetBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.GetItemInput {
 
-        return {
+        return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
             ProjectionExpression: buildDynamoKeyExpression(this._projection),
             ...this._buildReturnParameters(),
-        };
+        });
     }
 }

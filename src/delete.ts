@@ -9,6 +9,7 @@ import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord, DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExistenceOperator, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildDynamoKey, buildSingletonCombination, expressionHasCondition, verifyDynamoAttributeType } from "./expression/expression";
+import { onlyUseValidObjectProperties } from "./util";
 
 export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
@@ -171,15 +172,15 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
 
         if (!this._hasCondition()) {
 
-            return {
+            return onlyUseValidObjectProperties({
 
                 TableName: this._tableName,
                 Key: buildDynamoKey(this._where),
                 ...this._buildReturnParameters(),
-            };
+            });
         }
 
-        return {
+        return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
@@ -187,7 +188,7 @@ export class DynamoDeleteBuilder extends DynamoBaseBuilder {
             ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._condition),
             ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._condition),
             ...this._buildReturnParameters(),
-        };
+        });
     }
 
     private _hasCondition(): boolean {

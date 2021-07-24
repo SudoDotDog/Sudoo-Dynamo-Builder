@@ -7,6 +7,7 @@
 import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
+import { onlyUseValidObjectProperties } from "./util";
 
 export class DynamoPutBuilder extends DynamoBaseBuilder {
 
@@ -46,12 +47,12 @@ export class DynamoPutBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.PutItemInput {
 
-        return {
+        return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             Item: this._buildItems(),
             ...this._buildReturnParameters(),
-        };
+        });
     }
 
     private _buildItems(): Record<string, string> {

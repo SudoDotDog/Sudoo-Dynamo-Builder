@@ -23,3 +23,20 @@ export const joinOrConditions = (conditions: string[]): string => {
         return each;
     }).join(' OR ');
 };
+
+export const onlyUseValidObjectProperties = <T extends Record<string, any>>(target: T): T => {
+
+    const keys: string[] = Object.keys(target);
+
+    return keys.reduce((previous: T, key: string) => {
+
+        if (target[key] === undefined) {
+            return previous;
+        }
+
+        return {
+            ...previous,
+            [key]: target[key]
+        };
+    }, {} as T);
+};

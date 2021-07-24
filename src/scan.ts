@@ -10,6 +10,7 @@ import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExisten
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
 import { buildSingletonCombination, verifyDynamoAttributeType } from "./expression/expression";
 import { buildDynamoKeyExpression } from "./expression/key";
+import { onlyUseValidObjectProperties } from "./util";
 
 export class DynamoScanBuilder extends DynamoBaseBuilder {
 
@@ -177,7 +178,7 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.ScanInput {
 
-        return {
+        return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             FilterExpression: buildDynamoConditionExpression(this._filter),
@@ -185,6 +186,6 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
             ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._filter),
             ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._filter),
             ...this._buildReturnParameters(),
-        };
+        });
     }
 }

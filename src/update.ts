@@ -9,6 +9,7 @@ import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord, DynamoUpdateRecord } from "./declare";
 import { buildDynamoKey, expressionHasContent } from "./expression/expression";
 import { buildDynamoUpdateAttributeNames, buildDynamoUpdateAttributeValues, buildDynamoUpdateExpression } from "./expression/update";
+import { onlyUseValidObjectProperties } from "./util";
 
 export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
@@ -85,15 +86,15 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
 
         if (!this._hasContent()) {
 
-            return {
+            return onlyUseValidObjectProperties({
 
                 TableName: this._tableName,
                 Key: buildDynamoKey(this._where),
                 ...this._buildReturnParameters(),
-            };
+            });
         }
 
-        return {
+        return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
@@ -101,7 +102,7 @@ export class DynamoUpdateBuilder extends DynamoBaseBuilder {
             ExpressionAttributeNames: buildDynamoUpdateAttributeNames(this._update),
             ExpressionAttributeValues: buildDynamoUpdateAttributeValues(this._update),
             ...this._buildReturnParameters(),
-        };
+        });
     }
 
     private _hasContent(): boolean {
