@@ -8,6 +8,7 @@ import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoRecord } from "./declare";
 import { buildDynamoKey } from "./expression/expression";
+import { buildDynamoKeyExpression } from "./expression/key";
 
 export class DynamoGetBuilder extends DynamoBaseBuilder {
 
@@ -19,6 +20,7 @@ export class DynamoGetBuilder extends DynamoBaseBuilder {
     private readonly _tableName: string;
 
     private readonly _where: DynamoRecord[] = [];
+    private readonly _projection: string[] = [];
 
     private constructor(tableName: string) {
 
@@ -40,12 +42,29 @@ export class DynamoGetBuilder extends DynamoBaseBuilder {
         return this;
     }
 
+    public projectKey(key: string): this {
+
+        return this.projectKeys(key);
+    }
+
+    public projectKeys(...keys: string[]): this {
+
+        return this.projectKeyList(keys);
+    }
+
+    public projectKeyList(keys: string[]): this {
+
+        this._projection.push(...keys);
+        return this;
+    }
+
     public build(): DynamoDB.DocumentClient.GetItemInput {
 
         return {
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
+            ProjectionExpression: buildDynamoKeyExpression(this._projection),
             ...this._buildReturnParameters(),
         };
     }
