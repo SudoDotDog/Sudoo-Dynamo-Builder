@@ -8,19 +8,19 @@
 import { DynamoDB } from "aws-sdk";
 import { expect } from "chai";
 import * as Chance from "chance";
-import { DynamoScanBuilder } from "../../src";
+import { DynamoQueryBuilder } from "../../src";
 
-describe('Given {DynamoScanBuilder} class', (): void => {
+describe('Given {DynamoQueryBuilder} class', (): void => {
 
-    const chance: Chance.Chance = new Chance('dynamo-builder-scan');
+    const chance: Chance.Chance = new Chance('dynamo-builder-query');
 
-    it('should be able to create simple scan input', (): void => {
+    it('should be able to create simple query input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key', 'value')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key', 'value')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -36,17 +36,17 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create attribute type scan input', (): void => {
+    it('should be able to create attribute type query input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value')
-            .attributeTypeIfExist('key2', 'String')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value')
+            .filterAttributeTypeIfExist('key2', 'String')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -64,17 +64,17 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create attribute exist scan input', (): void => {
+    it('should be able to create attribute exist query input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value')
-            .attributeExistence('key2')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value')
+            .filterAttributeExistence('key2')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -91,17 +91,17 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create simple scan input - with contains', (): void => {
+    it('should be able to create simple query input - with contains', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value1')
-            .simpleFilter('key2', 'value2', 'contains')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value1')
+            .filterSimple('key2', 'value2', 'contains')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -119,16 +119,16 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create simple scan input with operator', (): void => {
+    it('should be able to create simple query input with operator', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key', 'value', '>=')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key', 'value', '>=')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -144,18 +144,18 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create simple scan input optional', (): void => {
+    it('should be able to create simple query input optional', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilterIfExist('key1', 'value1')
-            .simpleFilterIfExist('key2', undefined)
-            .simpleFilterIfExist('key3', 'value3')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimpleIfExist('key1', 'value1')
+            .filterSimpleIfExist('key2', undefined)
+            .filterSimpleIfExist('key3', 'value3')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -173,17 +173,17 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create complex scan input', (): void => {
+    it('should be able to create complex query input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value1')
-            .simpleFilter('key1', 'value2', '<>')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value1')
+            .filterSimple('key1', 'value2', '<>')
             .filterWith({
                 records: [{
                     key: 'key3',
@@ -218,19 +218,19 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
-    it('should be able to create scan with not used input', (): void => {
+    it('should be able to create query with not used input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('out', 'start', '>')
-            .simpleFilter('out', 'end', '<')
-            .simpleFilter('place', 'place')
-            .simpleFilterIfExist('notUsed')
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('out', 'start', '>')
+            .filterSimple('out', 'end', '<')
+            .filterSimple('place', 'place')
+            .filterSimpleIfExist('notUsed')
             .build();
 
         expect(input).to.be.deep.equal({
@@ -249,17 +249,17 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 
     it('should be able to create reversed input', (): void => {
 
         const tableName: string = chance.string();
 
-        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
-        const input: DynamoDB.DocumentClient.ScanInput = builder
-            .simpleFilter('key1', 'value1')
-            .simpleFilter('key2', 'value2', '=', true)
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value1')
+            .filterSimple('key2', 'value2', '=', true)
             .build();
 
         expect(input).to.be.deep.equal({
@@ -277,6 +277,40 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnConsumedCapacity: "NONE",
             ReturnItemCollectionMetrics: "NONE",
             ReturnValues: "NONE",
-        } as DynamoDB.DocumentClient.ScanInput);
+        } as DynamoDB.DocumentClient.QueryInput);
+    });
+
+    it('should be able to create query with both conditions and filters', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key1', 'value1')
+            .filterSimple('key2', 'value2', 'contains')
+            .conditionSimple('key1', 'value3')
+            .conditionBetween('key2', 'before', 'after', true)
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+                '#key2': 'key2',
+            },
+            ExpressionAttributeValues: {
+                ':__key1_0': 'value1',
+                ':__key1_1': 'value3',
+                ':__key2_0': 'value2',
+                ':__key2_1': 'before',
+                ':__key2_2': 'after',
+            },
+            FilterExpression: '#key1 = :__key1_0 AND contains(#key2, :__key2_0)',
+            KeyConditionExpression: "#key1 = :__key1_1 AND (NOT #key2 BETWEEN :__key2_1 AND :__key2_2)",
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.QueryInput);
     });
 });

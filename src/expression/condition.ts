@@ -68,10 +68,16 @@ const buildExpressionOperations = (keyHandler: ExpressionCorrectKeyHandler, reco
     return regular;
 };
 
-export const buildDynamoConditionExpression = (combinations: DynamoSearchCombination[]): string => {
+export const buildDynamoConditionExpression = (
+    combinations: DynamoSearchCombination[],
+    correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations),
+): string | undefined => {
+
+    if (combinations.length === 0) {
+        return undefined;
+    }
 
     const expressionStack: string[] = [];
-    const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinations);
 
     combination: for (const combination of combinations) {
 

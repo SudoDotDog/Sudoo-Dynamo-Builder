@@ -8,6 +8,7 @@ import { DynamoDB } from "aws-sdk";
 import { DynamoBaseBuilder } from "./base";
 import { DynamoSearchAttributeType, DynamoSearchCombination, DynamoSearchExistenceOperator, DynamoSearchSimpleOperator } from "./declare";
 import { buildDynamoConditionAttributeNames, buildDynamoConditionAttributeValues, buildDynamoConditionExpression } from "./expression/condition";
+import { ExpressionCorrectKeyHandler } from "./expression/correct-key";
 import { buildSingletonCombination, verifyDynamoAttributeType } from "./expression/expression";
 import { buildDynamoKeyExpression } from "./expression/key";
 import { onlyUseValidObjectProperties } from "./util";
@@ -308,14 +309,20 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.QueryInput {
 
+        const combinedCombination: DynamoSearchCombination[] = [
+            ...this._filter,
+            ...this._condition,
+        ];
+
+        const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinedCombination);
         return onlyUseValidObjectProperties({
 
             TableName: this._tableName,
             ProjectionExpression: buildDynamoKeyExpression(this._projection),
-            FilterExpression: buildDynamoConditionExpression(this._filter),
-            KeyConditionExpression: buildDynamoConditionExpression(this._condition),
-            ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._filter),
-            ExpressionAttributeValues: buildDynamoConditionAttributeValues(this._filter),
+            FilterExpression: buildDynamoConditionExpression(this._filter, correctKeyHandler),
+            KeyConditionExpression: buildDynamoConditionExpression(this._condition, correctKeyHandler),
+            ExpressionAttributeNames: buildDynamoConditionAttributeNames(combinedCombination),
+            ExpressionAttributeValues: buildDynamoConditionAttributeValues(combinedCombination),
             ...this._buildReturnParameters(),
         });
     }
