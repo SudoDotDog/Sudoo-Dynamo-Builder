@@ -10,6 +10,7 @@ import { DynamoBatchPutBuilder } from "./batch-put";
 import { DynamoDeleteBuilder } from "./delete";
 import { DynamoGetBuilder } from "./get";
 import { DynamoPutBuilder } from "./put";
+import { DynamoQueryBuilder } from "./query";
 import { DynamoScanBuilder } from "./scan";
 import { DynamoUpdateBuilder } from "./update";
 
@@ -55,6 +56,11 @@ export class DynamoBuilder {
     public put(): DynamoPutBuilder {
 
         return DynamoPutBuilder.create(this._tableName);
+    }
+
+    public query(): DynamoQueryBuilder {
+
+        return DynamoQueryBuilder.create(this._tableName);
     }
 
     public scan(): DynamoScanBuilder {
