@@ -126,4 +126,25 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
+
+    it('should be able to update with undefined', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoUpdateBuilder = DynamoUpdateBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.UpdateItemInput = builder
+            .where('key', 'value')
+            .update('key1', undefined)
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key: 'value',
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.UpdateItemInput);
+    });
 });
