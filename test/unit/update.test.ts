@@ -147,4 +147,32 @@ describe('Given {DynamoUpdateBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.UpdateItemInput);
     });
+
+    it('should be able to update with null', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoUpdateBuilder = DynamoUpdateBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.UpdateItemInput = builder
+            .where('key', 'value')
+            .update('key1', null)
+            .build();
+
+        expect(input).to.be.deep.equal({
+            TableName: tableName,
+            Key: {
+                key: 'value',
+            },
+            UpdateExpression: 'set #key1 = :key1',
+            ExpressionAttributeNames: {
+                '#key1': 'key1',
+            },
+            ExpressionAttributeValues: {
+                ':key1': null,
+            },
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.UpdateItemInput);
+    });
 });
