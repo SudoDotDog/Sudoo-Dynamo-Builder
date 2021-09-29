@@ -16,7 +16,7 @@
     "@sudoo/build-utils": "^1.0.0",
     "@sudoo/license": "^1.1.0",
     "@sudoo/mock": "^1.5.0",
-    "@sudoo/triforce": "^2.12.0",
+    "@sudoo/triforce": "^2.15.0",
     "aws-sdk": "^2.996.0"
   },
   "nyc": {
