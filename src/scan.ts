@@ -21,6 +21,8 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
+    private _indexName: string | undefined;
+
     private readonly _filter: DynamoSearchCombination[] = [];
     private readonly _projection: string[] = [];
 
@@ -29,6 +31,12 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
         super();
 
         this._tableName = tableName;
+    }
+
+    public secondaryIndex(indexName: string): this {
+
+        this._indexName = indexName;
+        return this;
     }
 
     public simpleFilterIfExist(
@@ -178,9 +186,10 @@ export class DynamoScanBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.ScanInput {
 
-        return onlyUseValidObjectProperties({
+        return onlyUseValidObjectProperties<DynamoDB.DocumentClient.ScanInput>({
 
             TableName: this._tableName,
+            IndexName: this._indexName,
             FilterExpression: buildDynamoConditionExpression(this._filter),
             ProjectionExpression: buildDynamoKeyExpression(this._projection),
             ExpressionAttributeNames: buildDynamoConditionAttributeNames(this._filter),

@@ -22,6 +22,8 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
 
     private readonly _tableName: string;
 
+    private _indexName: string | undefined;
+
     private readonly _condition: DynamoSearchCombination[] = [];
     private readonly _filter: DynamoSearchCombination[] = [];
     private readonly _projection: string[] = [];
@@ -31,6 +33,12 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         super();
 
         this._tableName = tableName;
+    }
+
+    public secondaryIndex(indexName: string): this {
+
+        this._indexName = indexName;
+        return this;
     }
 
     public filterSimpleIfExist(
@@ -315,9 +323,10 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
         ];
 
         const correctKeyHandler: ExpressionCorrectKeyHandler = ExpressionCorrectKeyHandler.fromCombinations(combinedCombination);
-        return onlyUseValidObjectProperties({
+        return onlyUseValidObjectProperties<DynamoDB.DocumentClient.QueryInput>({
 
             TableName: this._tableName,
+            IndexName: this._indexName,
             ProjectionExpression: buildDynamoKeyExpression(this._projection),
             FilterExpression: buildDynamoConditionExpression(this._filter, correctKeyHandler),
             KeyConditionExpression: buildDynamoConditionExpression(this._condition, correctKeyHandler),
