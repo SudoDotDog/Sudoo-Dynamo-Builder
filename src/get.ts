@@ -61,7 +61,7 @@ export class DynamoGetBuilder extends DynamoBaseBuilder {
 
     public build(): DynamoDB.DocumentClient.GetItemInput {
 
-        return onlyUseValidObjectProperties({
+        return onlyUseValidObjectProperties<DynamoDB.DocumentClient.GetItemInput>({
 
             TableName: this._tableName,
             Key: buildDynamoKey(this._where),
