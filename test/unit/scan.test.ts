@@ -279,4 +279,64 @@ describe('Given {DynamoScanBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.ScanInput);
     });
+
+    it('should be able to create scan input with page size', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .simpleFilter('key', 'value')
+            .pageSize(10)
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            Limit: 10,
+            ExpressionAttributeNames: {
+                '#key': 'key',
+            },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key = :key',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
+
+    it('should be able to create scan input with page size and last evaluation key', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoScanBuilder = DynamoScanBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.ScanInput = builder
+            .simpleFilter('key', 'value')
+            .pageSize(10)
+            .lastEvaluationKey({
+                'key': 'value',
+            })
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            Limit: 10,
+            ExclusiveStartKey: {
+                'key': 'value',
+            },
+            ExpressionAttributeNames: {
+                '#key': 'key',
+            },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key = :key',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.ScanInput);
+    });
 });

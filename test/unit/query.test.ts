@@ -313,4 +313,64 @@ describe('Given {DynamoQueryBuilder} class', (): void => {
             ReturnValues: "NONE",
         } as DynamoDB.DocumentClient.QueryInput);
     });
+
+    it('should be able to create query input with page limit', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key', 'value')
+            .pageSize(10)
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            Limit: 10,
+            ExpressionAttributeNames: {
+                '#key': 'key',
+            },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key = :key',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.QueryInput);
+    });
+
+    it('should be able to create query input with page limit and last evaluation key', (): void => {
+
+        const tableName: string = chance.string();
+
+        const builder: DynamoQueryBuilder = DynamoQueryBuilder.create(tableName);
+        const input: DynamoDB.DocumentClient.QueryInput = builder
+            .filterSimple('key', 'value')
+            .pageSize(10)
+            .lastEvaluationKey({
+                'key': 'value',
+            })
+            .build();
+
+        expect(input).to.be.deep.equal({
+
+            TableName: tableName,
+            Limit: 10,
+            ExclusiveStartKey: {
+                'key': 'value',
+            },
+            ExpressionAttributeNames: {
+                '#key': 'key',
+            },
+            ExpressionAttributeValues: {
+                ':key': 'value',
+            },
+            FilterExpression: '#key = :key',
+            ReturnConsumedCapacity: "NONE",
+            ReturnItemCollectionMetrics: "NONE",
+            ReturnValues: "NONE",
+        } as DynamoDB.DocumentClient.QueryInput);
+    });
 });

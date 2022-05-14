@@ -23,6 +23,8 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
     private readonly _tableName: string;
 
     private _indexName: string | undefined;
+    private _pageSize: number | undefined;
+    private _lastEvaluationKey: Record<string, any> | undefined;
 
     private readonly _condition: DynamoSearchCombination[] = [];
     private readonly _filter: DynamoSearchCombination[] = [];
@@ -38,6 +40,18 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
     public secondaryIndex(indexName: string): this {
 
         this._indexName = indexName;
+        return this;
+    }
+
+    public pageSize(pageSize: number): this {
+
+        this._pageSize = pageSize;
+        return this;
+    }
+
+    public lastEvaluationKey(lastEvaluationKey: Record<string, any>): this {
+
+        this._lastEvaluationKey = lastEvaluationKey;
         return this;
     }
 
@@ -327,6 +341,8 @@ export class DynamoQueryBuilder extends DynamoBaseBuilder {
 
             TableName: this._tableName,
             IndexName: this._indexName,
+            Limit: this._pageSize,
+            ExclusiveStartKey: this._lastEvaluationKey,
             ProjectionExpression: buildDynamoKeyExpression(this._projection),
             FilterExpression: buildDynamoConditionExpression(this._filter, correctKeyHandler),
             KeyConditionExpression: buildDynamoConditionExpression(this._condition, correctKeyHandler),
