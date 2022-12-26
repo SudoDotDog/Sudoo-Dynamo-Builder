@@ -15,7 +15,7 @@
   "devDependencies": {
     "@sudoo/mock": "^1.5.0",
     "@sudoo/triforce": "^3.10.1",
-    "aws-sdk": "^2.1281.0"
+    "aws-sdk": "^2.1282.0"
   },
   "nyc": {
     "extension": [
